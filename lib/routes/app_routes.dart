@@ -1,5 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/features/add/screen/add_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
@@ -73,10 +76,27 @@ class AppRouter {
         builder: (context, state) => const CameraScreen(),
        ),
 
-      GoRoute(
+        GoRoute(
         path: EditFilterScreen.routeName,
         name: EditFilterScreen.routeName,
         builder: (context, state) => const EditFilterScreen(),
+      ),
+
+      GoRoute(
+        path: CropScreen.routeName,
+        name: CropScreen.routeName,
+        builder: (context, state) => const CropScreen(),
+      ),
+      GoRoute(
+        path: CropSaveScreen.routeName,
+        name: CropSaveScreen.routeName,
+        builder: (context, state) => const CropSaveScreen(),
+      ),
+
+      GoRoute(
+        path: DocumentPreviewScreen.routeName,
+        name: DocumentPreviewScreen.routeName,
+        builder: (context, state) => const DocumentPreviewScreen(),
       ),
 
 

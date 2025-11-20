@@ -5,11 +5,11 @@ import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
-
   static const String routeName = '/cameraScanner';
 
   @override
@@ -141,6 +141,95 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
+  void _showResolutionPopup(BuildContext context) {
+    showMenu(
+      color: AllColor.gery100.withOpacity(0.60), // Background color
+      context: context,
+      position: RelativeRect.fromLTRB(100, 105, 100, 100),
+      elevation: 8.0,
+      items: [
+        PopupMenuItem<String>(
+          value: '12M',
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check, color: AllColor.white), // Done icon on the left
+                  SizedBox(width: 8.w), // Spacing between icon and text
+                  Text("12M (3968x2976)"),
+                ],
+              ),
+              Divider(color: AllColor.gery.withOpacity(0.2),), // Divider added below text
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: '8M',
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check, color: Colors.transparent), // Placeholder for unselected
+                  SizedBox(width: 8.w),
+                  Text("8M (3840x2160)"),
+                ],
+              ),
+              Divider(color: AllColor.gery.withOpacity(0.2),),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: '5M',
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check, color: Colors.transparent),
+                  SizedBox(width: 8.w),
+                  Text("5M (3072x1728)"),
+                ],
+              ),
+              Divider(color: AllColor.gery.withOpacity(0.2),),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: '4M',
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check, color: Colors.transparent),
+                  SizedBox(width: 8.w),
+                  Text("4M (2560x1920)"),
+                ],
+              ),
+              Divider(color: AllColor.gery.withOpacity(0.2),),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: '2M',
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check, color: Colors.transparent),
+                  SizedBox(width: 8.w),
+                  Text("2M (1920x1088)"),
+                ],
+              ),
+              Divider(color: AllColor.gery.withOpacity(0.2),),
+            ],
+          ),
+        ),
+      ],
+
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,22 +253,23 @@ class _CameraScreenState extends State<CameraScreen> {
                   const Spacer(),
                   IconButton(
                     onPressed: () {
-                      // TODO: flash toggle (torch control)
+                      context.push(CropScreen.routeName);
                     },
                     iconSize: 22.sp,
                     icon: SvgPicture.asset(
                       'assets/images/crop.svg',
                       width: 22.w,
                       height: 22.w,
-                      colorFilter: const ColorFilter.mode(
+                      colorFilter:  ColorFilter.mode(
                         Colors.white,
                         BlendMode.srcIn,
                       ),
                     ),
                   ),
+
                   IconButton(
                     onPressed: () {
-                      // TODO: front/back switch
+                      _showResolutionPopup(context);
                     },
                     iconSize: 22.sp,
                     icon: SvgPicture.asset(
@@ -195,7 +285,8 @@ class _CameraScreenState extends State<CameraScreen> {
 
                 IconButton(
                   onPressed: () {
-                    // TODO: front/back switch
+                    _showCustomPopupMenu(context);
+
                   },
                   iconSize: 22.sp, // optional
                   icon: SvgPicture.asset(
@@ -420,6 +511,9 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
+
+
+
   Widget _buildPageModeChip(
       String text, {
         required bool selected,
@@ -448,7 +542,64 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
     );
   }
-}
+
+  void _showCustomPopupMenu(BuildContext context) {
+
+      showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(100,105, 10, 200),
+        color: AllColor.gery100.withOpacity(0.60),
+        elevation: 8.0,
+
+        items: [
+          PopupMenuItem<String>(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/charge.svg',
+                  width: 24.w,
+                  height: 24.w,
+
+                ),
+
+                SizedBox(width: 20.w),
+                SvgPicture.asset(
+                  'assets/images/charge_x.svg',
+                  width: 24.w,
+                  height: 24.w,
+
+                ),
+                SizedBox(width: 20.w),
+                SvgPicture.asset(
+                  'assets/images/charge_a.svg',
+                  width: 24.w,
+                  height: 24.w,
+
+                ),
+
+                SizedBox(width: 20.w),
+                SvgPicture.asset(
+                  'assets/images/charge_light.svg',
+                  width: 24.w,
+                  height: 24.w,
+
+                ),
+
+              ],
+            ),
+          ),
+
+
+
+        ],
+
+
+      );
+    }
+  }
+
+
 
 class _ModeTab extends StatelessWidget {
   final String label;
@@ -538,7 +689,6 @@ class ImageWithBadge extends StatelessWidget {
                 decoration:  BoxDecoration(
                   color: AllColor.red,
                   borderRadius: BorderRadius.all(Radius.circular(100.r))
-                 
                 ),
                 child: Center(
                   child: Text(
@@ -559,3 +709,4 @@ class ImageWithBadge extends StatelessWidget {
     );
   }
 }
+

@@ -179,7 +179,7 @@ class ToolCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 🔹 শুধু premium হলে উপরে ডান পাশে icon
+
               if (item.isPremium)
                 Align(
                   alignment: Alignment.centerRight,
@@ -199,18 +199,12 @@ class ToolCard extends StatelessWidget {
               else
                 SizedBox(height: 18.h), // height balance রাখার জন্য
 
-              Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: SvgPicture.asset(
+                SvgPicture.asset(
                   item.svgAsset,
-                  width: 29.w,
-                  height: 29.h,
+                  width: 34.w,
+                  height: 34.h,
                   fit: BoxFit.cover,
-                ),
+
               ),
               SizedBox(height: 10.h),
               Text(

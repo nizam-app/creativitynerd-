@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/widget/CustomAppbar.dart';
 
@@ -88,8 +89,25 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
         textColor: AllColor.white,
         title: "PDFScanner10-18-2025",
         centerTitle: true,
-        actionText: 'Done',
-        onBack: () => Navigator.of(context).pop(),
+
+        actions: [
+          TextButton(
+            onPressed: () {
+
+            },
+            child: Text(
+              "Done",
+              style: TextStyle(
+                fontFamily: "sf_Pro",
+                fontWeight: FontWeight.w600,
+                fontSize: 17,
+                color: AllColor.primary,
+              ),
+            ),
+          ),
+        ],
+
+        onBack: () => context.pop(),
       ),
 
       body: Column(
@@ -98,7 +116,7 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
           Expanded(
             child: Center(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12.r),
