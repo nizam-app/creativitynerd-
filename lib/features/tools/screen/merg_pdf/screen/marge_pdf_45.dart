@@ -64,7 +64,6 @@ class MargePdf45 extends ConsumerWidget {
                       showLock:isCheckScreenName == ScreenName.unlock? true: false,
                       showArrow: isCheckScreenName == ScreenName.unlock? true: false,
 
-                      
 
                       onDocumentTap: (doc) async{
                         if (isCheckScreenName == ScreenName.unlock) {
