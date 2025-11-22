@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.linear,
     );
 
-    // animation ses hole onboarding e jabe
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
         context.go(OnboardingScreen.routeName);
@@ -92,8 +91,18 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
                 const Spacer(),
+                //
+                // AnimatedBuilder(
+                //   animation: _animation,
+                //   builder: (context, child) {
+                //     return SimpleProgressBar(
+                //       progress: _animation.value, // 0.0 .. 1.0
+                //       height: 6.h,
+                //       horizontalInset: 50.w,
+                //     );
+                //   },
+                // ),
 
-                // 🔹 Same design moving segment progress bar
                 AnimatedBuilder(
                   animation: _animation,
                   builder: (context, child) {
@@ -114,6 +123,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
+
+
 class SimpleProgressBar extends StatelessWidget {
   /// 0.0 .. 1.0 -> segment er position
   final double progress;
@@ -126,7 +137,7 @@ class SimpleProgressBar extends StatelessWidget {
     super.key,
     required this.progress,
     this.height = 4,
-    this.horizontalInset = 20,
+    this.horizontalInset = 30,
     this.trackColor = AllColor.white, // jei color chao use korte paro
     this.fillColor = AllColor.primary,
   });
@@ -134,22 +145,20 @@ class SimpleProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // IMPORTANT: clamp() num return kore, tai double e convert korlam
-    final double p = progress.clamp(0.0, 1.0).toDouble();
+    final double p = progress.clamp(0.1, 1.0).toDouble();
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final double trackW = constraints.maxWidth;
 
-        // দুই পাশের gap বাদ দিয়ে usable width
         final double innerW =
         (trackW - horizontalInset * 2).clamp(0.0, double.infinity);
 
         // segment total width er 50%
-        const double segmentFraction = 0.50;
+        const double segmentFraction = 0.60;
         final double segmentW = innerW * segmentFraction;
 
-        // বাঁ দিক থেকে ডান দিকে offset
+
         final double maxOffset = innerW - segmentW;
         final double offset = maxOffset * p;
 
@@ -158,7 +167,7 @@ class SimpleProgressBar extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             color: trackColor,
-            borderRadius: BorderRadius.circular(height / 2),
+            borderRadius: BorderRadius.circular(height / 1),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalInset),
@@ -172,7 +181,7 @@ class SimpleProgressBar extends StatelessWidget {
                     width: segmentW,
                     decoration: BoxDecoration(
                       color: fillColor,
-                      borderRadius: BorderRadius.circular(height / 2),
+                      borderRadius: BorderRadius.circular(height / 1),
                     ),
                   ),
                 ),

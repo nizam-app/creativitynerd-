@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,20 +34,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F8FC),
+      backgroundColor:  Color(0xFFF6F8FC),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const _TopRow(),
-            const _TitleSliver(title: 'Library'),
+             _TopRow(),
+             _TitleSliver(title: 'Library'),
             _SearchAndToggleSliver(
               isGrid: _isGrid,
               onToggle: () => setState(() => _isGrid = !_isGrid),
               onSearch: (v) {},
             ),
 
-            // ✅ SliverToBoxAdapter, এবং height-এ h
-            SliverToBoxAdapter(child: SizedBox(height: 10.h)),
+
+            //SliverToBoxAdapter(child: SizedBox(height: 10.h)),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(height: 5.h),
+                  Divider(
+                    color: AllColor.gery,  // Optional: Set color for the divider
+                    thickness: 0.5,  // Optional: Adjust thickness of the divider
+                  ),
+                ],
+              ),
+            ),
 
             _ToolsSectionSliver(
               tools: _tools,
@@ -71,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // উদাহরণ: নিচের "+" থেকে শিট দেখাতে চাইলে
+
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _openAddSheet,
       //   backgroundColor: AllColor.gery,
@@ -95,10 +107,20 @@ class _TopRow extends StatelessWidget {
           children: [
             const _UpgradePill(),
             const Spacer(),
-            _RoundIconButton(
-              onTap: () {},
-              child: Icon(Icons.more_horiz, color: AllColor.black, size: 18.sp), // ✅ fixed
+          Material(
+            color: AllColor.gery100.withOpacity(0.10),
+            shape: const CircleBorder(),
+            elevation: 0,
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: (){},
+              child: Padding(
+                padding: EdgeInsets.all(16.r), 
+                child:Icon(Icons.more_horiz, color: AllColor.black, size: 18.sp) ,
+              ),
             ),
+          ), 
+            
           ],
         ),
       ),
@@ -184,13 +206,13 @@ class _ToolsSectionSliver extends StatelessWidget {
                   'Tools',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    color:AllColor.black,
+                    color:AllColor.black.withOpacity(0.60),
                     fontSize: 14.sp,
                     fontFamily: "sf_Pro"
                   ),
                 ),
                 const Spacer(),
-                Icon(Icons.chevron_right_rounded, color: AllColor.black, size: 20.sp, ),
+                Icon(Icons.chevron_right_rounded, color: AllColor.black.withOpacity(0.60), size: 20.sp, ),
               ],
             ),
           ),
@@ -223,7 +245,7 @@ class _SectionHeaderSliver extends StatelessWidget {
           text,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            color: AllColor.black,
+            color: AllColor.black.withOpacity(0.60),
             fontSize: 12.sp,
             fontFamily: "sf_Pro"
           ),
@@ -351,7 +373,6 @@ class _UpgradePill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Icon(Icons.emoji_events_rounded, size: 14.sp, color: const Color(0xFFFC8E2B)),
-
           SvgPicture.asset('assets/images/Vector.svg', width: 14.sp, height: 14.sp,color: AllColor.white, ),
           SizedBox(width: 6.w),
           Text(
@@ -377,21 +398,30 @@ class _RoundIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AllColor.gery,
-      shape: const CircleBorder(),
-      elevation: 0,
       child: InkWell(
-        customBorder: const CircleBorder(),
         onTap: onTap,
-        child: Padding(padding: EdgeInsets.all(16.r), child: child),
+        child: Container(
+          padding: EdgeInsets.all(16.r),
+          decoration: BoxDecoration(
+            color: AllColor.gery100.withOpacity(0.10),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AllColor.gery100.withOpacity(0.10))
+          ),
+          child: child,
+        ),
+
+
       ),
     );
   }
 }
 
+
+
 class _SearchField extends StatelessWidget {
   final String hint;
   final ValueChanged<String>? onChanged;
+
   const _SearchField({required this.hint, this.onChanged});
 
   @override
@@ -399,7 +429,7 @@ class _SearchField extends StatelessWidget {
     return TextField(
       style: TextStyle(
         fontWeight: FontWeight.w400,
-        color: AllColor.black,
+        color: AllColor.black.withOpacity(0.60),
         fontFamily: "sf_Pro",
         fontSize: 17.sp,
       ),
@@ -408,21 +438,27 @@ class _SearchField extends StatelessWidget {
         hintText: hint,
         hintStyle: TextStyle(
             fontSize: 17.sp,
-            color: AllColor.black,
+            color: AllColor.black.withOpacity(0.60),
             fontWeight: FontWeight.w400,
             fontFamily: "sf_Pro"),
         prefixIcon: Padding(
-          padding: EdgeInsets.all(10.r),
-          child: Icon(Icons.search, color: AllColor.gery100, size: 17.sp,),
+          padding: EdgeInsets.only(left: 30.r), // Padding for proper alignment
+          child: Icon(Icons.search, color: AllColor.gery100, size: 20.sp), // Search icon with size
         ),
         filled: true,
-        fillColor: AllColor.gery,
-        contentPadding: EdgeInsets.symmetric(vertical: 12.r, horizontal: 12.r),
+        fillColor: AllColor.gery100.withOpacity(0.10),  // Background color of the search bar
+        contentPadding: EdgeInsets.symmetric(vertical: 10.r, horizontal: 16.r), // Ensure the text is centered with proper padding
         border: OutlineInputBorder(
-
           borderRadius: BorderRadius.circular(14.r),
-           borderSide: BorderSide(color: AllColor.gery, width: 1.w),
-
+          borderSide: BorderSide(color: AllColor.gery, width: 1.w),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14.r),
+          borderSide: BorderSide(color: AllColor.gery100.withOpacity(0.10), width: 1.w),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14.r),
+          borderSide: BorderSide(color: AllColor.gery100.withOpacity(0.10), width: 1.w),
         ),
       ),
     );
@@ -432,6 +468,7 @@ class _SearchField extends StatelessWidget {
 class _ToolCard extends StatelessWidget {
   final ToolItem item;
   final VoidCallback onTap;
+
   const _ToolCard({required this.item, required this.onTap});
 
   @override
@@ -440,42 +477,44 @@ class _ToolCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(14.r),
       onTap: onTap,
       child: Ink(
-        width: 120.w,
+        width: 114.w,
         decoration: BoxDecoration(
-          color: AllColor.white,
+          color: item.tint.withOpacity(0.1),  // Background color with opacity for better visual
           borderRadius: BorderRadius.circular(12.r),
-          //boxShadow: [BoxShadow(color: AllColor.black, blurRadius: 12.r, offset: const Offset(0, 3))],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: item.tint.withOpacity(0.2), // Shadow with the same color tint
+          //     blurRadius: 8.r,
+          //     offset: const Offset(0, 3), // Shadow offset
+          //   ),
+          //],
         ),
         child: Padding(
           padding: EdgeInsets.all(12.w),
           child: FittedBox(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: EdgeInsets.all(6.w),
-                  decoration: BoxDecoration(
-                    color: item.tint.withOpacity(.2),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: SvgPicture.asset(
-                    item.svg,
-                    // width: 30.w,
-                    // height: 30.h,
-                    // colorFilter: ColorFilter.mode(item.tint, BlendMode.srcIn),
+                // Container with background color and icon
+                SvgPicture.asset(
+                  item.svg,
+                  color: Colors.white,  // White icon to contrast with the background
+                  width: 70.w,
+                  height: 70.h,
+                  colorFilter: ColorFilter.mode(item.tint, BlendMode.srcIn), // Apply the same color tint to the icon
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  item.label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AllColor.toolsColor,
+                    fontSize: 12.sp,
+                    fontFamily: "gilroy",
                   ),
                 ),
-                SizedBox(height:8.h),
-                 Text(
-                    item.label,
-                    maxLines: 2,
-                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: AllColor.black,
-                        fontSize: 17.sp,
-                        fontFamily: "gilroy"),
-                  ),
-            
               ],
             ),
           ),
@@ -484,7 +523,6 @@ class _ToolCard extends StatelessWidget {
     );
   }
 }
-
 class _PdfThumb extends StatelessWidget {
   const _PdfThumb();
 
@@ -493,8 +531,8 @@ class _PdfThumb extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 60.w,
-        height: 60.h,
+        width: 70.w,
+        height: 70.h,
         decoration: BoxDecoration(
            color: AllColor.white,
           borderRadius: BorderRadius.circular(4.r, ),
@@ -537,10 +575,10 @@ class _RecentFileTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(file.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp, color: Colors.black87)),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp, color: AllColor.black..withOpacity(0.60))),
               SizedBox(height: 6.h),
               Text('${file.pages} pages  •  ${file.sizeKb} KB',
-                  style: TextStyle(fontSize: 12.sp, color: AllColor.black, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 12.sp, color: AllColor.black.withOpacity(0.60), fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -551,7 +589,7 @@ class _RecentFileTile extends StatelessWidget {
           ),
           child: Padding(
             padding: EdgeInsets.all(6.w),
-            child: Icon(Icons.more_horiz, color: AllColor.black, size: 20.sp,),
+            child: Icon(Icons.more_horiz, color: AllColor.gery100.withOpacity(0.60), size: 20.sp,),
             //SvgPicture.asset('assets/images/book.svg', width: 18.sp, height: 18.sp, color: AllColor.primary,),
           ),
         ),
@@ -641,7 +679,9 @@ void showAddSheet(BuildContext context) {
               child: _ActionTile(
                 svg: 'assets/images/camera.svg',
                 label: 'Scan\nDocument',
-                onTap: () {},
+                onTap: () {
+                  context.push(CameraScreen.routeName);
+                },
               ),
             ),
           ],
