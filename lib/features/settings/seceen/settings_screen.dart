@@ -1,13 +1,13 @@
-
 import 'package:flutter/material.dart';
-import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/core/widget/upgrade_plan_card.dart';
+import '../widget/lagnuage.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
-
   static const routeName = '/settingsScreen';
 
   @override
@@ -16,102 +16,52 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _syncCloud = true;
-  LanguageOption _selectedLanguage = const LanguageOption(
+
+  LanguageOption _selectedLanguage = LanguageOption(
     code: 'en',
     name: 'English',
     nativeName: 'English',
     flagAsset: 'assets/flags/us.png',
   );
 
-  int _currentTab = 3; // Settings tab
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor:AllColor.white ,
+      backgroundColor: const Color(0xFFF3F5FB), // light grey/blue bg
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text(
+              Text(
                 'Settings',
                 style: TextStyle(
-                  fontSize:34.sp,
+                  fontSize: 34.sp,
                   fontWeight: FontWeight.w700,
                   fontFamily: "sf_Pro",
-                  color: AllColor.black
+                  color: AllColor.black,
                 ),
               ),
-               SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
               /// UPGRADE CARD
-              Container(
-                width: double.infinity,
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF4A6CFF), Color(0xFF7C3AED)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding:  EdgeInsets.all(10.r),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AllColor.gery,
-                      ),
-                      child: SvgPicture.asset('assets/images/injoy.svg', width: 60.sp, height: 60.sp, )
-                    ),
-                     SizedBox(width: 12.w),
-                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Upgrade Plan Now!',
-                            style: TextStyle(
-                              color: AllColor.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: "sf_Pro"
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            'Enjoy all the benefits and explore more possibilities',
-                            style: TextStyle(
-                              color:AllColor.white,
-                              fontSize: 10.sp,
-                              fontFamily: "sf_Pro",
-                              fontWeight: FontWeight.w500
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-               SizedBox(height: 24.h),
+              const UpgradePlanCard(),
+              SizedBox(height: 24.h),
 
               /// LANGUAGE
-               _SectionHeader(title: 'LANGUAGE'),
-              _SettingsTile(
-                leadingIcon: Icons.language,
+              const _SectionHeader(title: 'LANGUAGE'),
+              SettingsTile(
+                leading: SvgPicture.asset(
+                  'assets/images/language.svg',
+                  height: 24.h,
+                  width: 24.w,
+                ),
                 title: 'Language',
                 subtitle: _selectedLanguage.name,
                 onTap: () async {
-                  final result = await Navigator.of(context).push<
-                      LanguageOption>(
+                  final result =
+                  await Navigator.of(context).push<LanguageOption>(
                     MaterialPageRoute(
                       builder: (_) => LanguageSelectionScreen(
                         selected: _selectedLanguage,
@@ -124,49 +74,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
 
-               SizedBox(height: 12.sp),
+              SizedBox(height: 10.h),
 
               /// THEME
-               _SectionHeader(title: 'THEME'),
-               _SettingsTile(
-                leadingIcon: Icons.brightness_6_outlined,
+              const _SectionHeader(title: 'THEME'),
+              SettingsTile(
+                leading: SvgPicture.asset(
+                  'assets/images/appearance.svg',
+                  height: 24.h,
+                  width: 24.w,
+                ),
                 title: 'Appearance',
                 subtitle: 'Light',
+                onTap: () {},
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 10.h),
 
               /// CLOUD
               const _SectionHeader(title: 'CLOUD'),
-              _SettingsSwitchTile(
-                leadingIcon: Icons.cloud_sync_outlined,
+              SettingsSwitchTile(
+                leading: SvgPicture.asset(
+                  'assets/images/cloud.svg',
+                  height: 24.h,
+                  width: 24.w,
+                ),
                 title: 'Sync cloud storage',
                 value: _syncCloud,
                 onChanged: (v) => setState(() => _syncCloud = v),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 10.h),
 
-              /// GENERAL
+              /// GENERAL  (ONE CARD WITH 4 ROWS)
               const _SectionHeader(title: 'GENERAL'),
-              const _SettingsTile(
-                leadingIcon: Icons.ios_share_outlined,
-                title: 'Share app',
-              ),
-              const Divider(height: 1),
-              const _SettingsTile(
-                leadingIcon: Icons.star_border_rounded,
-                title: 'Rate us',
-              ),
-              const Divider(height: 1),
-              const _SettingsTile(
-                leadingIcon: Icons.privacy_tip_outlined,
-                title: 'Privacy policy',
-              ),
-              const Divider(height: 1),
-              const _SettingsTile(
-                leadingIcon: Icons.description_outlined,
-                title: 'Terms of use',
+              _GroupedSettingsCard(
+                tiles: [
+                  _GroupedSettingsTile(
+                    leading: SvgPicture.asset(
+                      'assets/images/share.svg',
+                      height: 24.h,
+                      width: 24.w,
+                    ),
+                    title: 'Share app',
+                    onTap: () {},
+                  ),
+                  _GroupedSettingsTile(
+                    leading: SvgPicture.asset(
+                      'assets/images/like.svg',
+                      height: 24.h,
+                      width: 24.w,
+                    ),
+                    title: 'Rate us',
+                    onTap: () {},
+                  ),
+                  _GroupedSettingsTile(
+                    leading: SvgPicture.asset(
+                      'assets/images/privacy.svg',
+                      height: 24.h,
+                      width: 24.w,
+                    ),
+                    title: 'Privacy policy',
+                    onTap: () {},
+                  ),
+                  _GroupedSettingsTile(
+                    leading: SvgPicture.asset(
+                      'assets/images/terms.svg',
+                      height: 24.h,
+                      width: 24.w,
+                    ),
+                    title: 'Terms of use',
+                    onTap: () {},
+                  ),
+                ],
               ),
             ],
           ),
@@ -176,180 +156,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-/// language model
-class LanguageOption {
-  final String code;
-  final String name;
-  final String nativeName;
-  final String flagAsset; // put local asset path here
-
-  const LanguageOption({
-    required this.code,
-    required this.name,
-    required this.nativeName,
-    required this.flagAsset,
-  });
-}
-
-/// CHOOSE LANGUAGE SCREEN
-class LanguageSelectionScreen extends StatefulWidget {
-  const LanguageSelectionScreen({Key? key, required this.selected})
-      : super(key: key);
-
-  final LanguageOption selected;
-
-  @override
-  State<LanguageSelectionScreen> createState() =>
-      _LanguageSelectionScreenState();
-}
-
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
-  late LanguageOption _current;
-
-  final List<LanguageOption> _languages = const [
-    LanguageOption(
-      code: 'en',
-      name: 'English',
-      nativeName: 'English',
-      flagAsset: 'assets/flags/us.png',
-    ),
-    LanguageOption(
-      code: 'fr',
-      name: 'French',
-      nativeName: 'français',
-      flagAsset: 'assets/flags/fr.png',
-    ),
-    LanguageOption(
-      code: 'de',
-      name: 'Germany',
-      nativeName: 'Deutsch',
-      flagAsset: 'assets/flags/de.png',
-    ),
-    LanguageOption(
-      code: 'au',
-      name: 'Australian',
-      nativeName: 'English',
-      flagAsset: 'assets/flags/au.png',
-    ),
-    LanguageOption(
-      code: 'ru',
-      name: 'Russian',
-      nativeName: 'Русский',
-      flagAsset: 'assets/flags/ru.png',
-    ),
-    LanguageOption(
-      code: 'ja',
-      name: 'Japanese',
-      nativeName: '日本語',
-      flagAsset: 'assets/flags/jp.png',
-    ),
-    LanguageOption(
-      code: 'zh',
-      name: 'Mandarin',
-      nativeName: '中文',
-      flagAsset: 'assets/flags/cn.png',
-    ),
-    LanguageOption(
-      code: 'it',
-      name: 'Italian',
-      nativeName: 'Italiano',
-      flagAsset: 'assets/flags/it.png',
-    ),
-    LanguageOption(
-      code: 'ar',
-      name: 'Arabic',
-      nativeName: 'العربية',
-      flagAsset: 'assets/flags/sa.png',
-    ),
-    LanguageOption(
-      code: 'ms',
-      name: 'Malaysian',
-      nativeName: 'Bahasa Melayu',
-      flagAsset: 'assets/flags/my.png',
-    ),
-    LanguageOption(
-      code: 'ur',
-      name: 'Urdu',
-      nativeName: 'اردو',
-      flagAsset: 'assets/flags/pk.png',
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _current = widget.selected;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    const bg = Color(0xFFF3F5FB);
-
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon:  Icon(Icons.arrow_back_ios_new_rounded, color: AllColor.black,size: 20.sp,),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title:  Text(
-          'Choose language',
-          style: TextStyle(
-
-              fontWeight: FontWeight.w600
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(_current),
-            child: const Text(
-              'Done',
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        itemCount: _languages.length,
-        separatorBuilder: (_, __) => const Divider(height: 1, indent: 72),
-        itemBuilder: (context, index) {
-          final lang = _languages[index];
-          final selected = lang.code == _current.code;
-
-          return ListTile(
-            onTap: () => setState(() => _current = lang),
-            leading: CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage(lang.flagAsset),
-            ),
-            title: Text(
-              lang.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            subtitle: Text(
-              lang.nativeName,
-              style: const TextStyle(fontSize: 13),
-            ),
-            trailing: selected
-                ? const Icon(
-              Icons.check,
-              color: Color(0xFF4A6CFF),
-            )
-                : null,
-          );
-        },
-      ),
-    );
-  }
-}
-
-/// small helpers
+/// ───────────────── Helpers ─────────────────
 
 class _SectionHeader extends StatelessWidget {
   final String title;
@@ -359,117 +166,127 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6.0, top: 8.0),
+      padding: EdgeInsets.only(bottom: 6.h, top: 8.h),
       child: Text(
         title,
-        style:  TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
           letterSpacing: 1,
-          color: AllColor.black,
+          color: AllColor.black.withOpacity(0.6),
           fontFamily: "sf_Pro",
-
         ),
       ),
     );
   }
 }
 
-class _SettingsTile extends StatelessWidget {
-  final IconData leadingIcon;
+/// Single tile card (Language, Theme, etc.)
+class SettingsTile extends StatelessWidget {
+  final Widget leading;
   final String title;
   final String? subtitle;
   final VoidCallback? onTap;
 
-  const _SettingsTile({
-    required this.leadingIcon,
+  const SettingsTile({
+    Key? key,
+    required this.leading,
     required this.title,
     this.subtitle,
     this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Row(
-              children: [
-                Icon(leadingIcon, size: 22.sp),
-                 SizedBox(width: 14.w),
-                Expanded(
-                  child:
-                      Text(
-                        title,
-                        style:  TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "sf_Pro",
-                          color: AllColor.black
-
-                        ),
-                      ),
-                ),
-                        SizedBox(width: 20.w,),
-                        Text(
-                          subtitle!,
-                          style:  TextStyle(
-                            fontSize: 14.sp,
-                            color:AllColor.black,
-                            fontFamily: "sf_Pro",
-                            fontWeight: FontWeight.w400
-                          ),
-                        ),
-                 Icon(Icons.chevron_right_rounded, color: AllColor.black, size: 20.sp),
-              ],
-
-            )), ),
-
-      ),
-    );
-  }
-}
-
-class _SettingsSwitchTile extends StatelessWidget {
-  final IconData leadingIcon;
-  final String title;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _SettingsSwitchTile({
-    required this.leadingIcon,
-    required this.title,
-    required this.value,
-    required this.onChanged,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: BorderRadius.circular(12.r),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12.r),
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+          child: Row(
+            children: [
+              leading,
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "sf_Pro",
+                    color: AllColor.black,
+                  ),
+                ),
+              ),
+              if (subtitle != null && subtitle!.isNotEmpty) ...[
+                SizedBox(width: 8.w),
+                Text(
+                  subtitle!,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AllColor.black.withOpacity(0.6),
+                    fontFamily: "sf_Pro",
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+              SizedBox(width: 8.w),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AllColor.black,
+                size: 24.sp,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Switch tile (Cloud section)
+class SettingsSwitchTile extends StatelessWidget {
+  final Widget leading;
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const SettingsSwitchTile({
+    Key? key,
+    required this.leading,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
       child: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 16.r, vertical: 14.r),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         child: Row(
           children: [
-            Icon(leadingIcon, size: 22.sp),
-             SizedBox(width: 14.sp),
+            leading,
+            SizedBox(width: 14.w),
             Expanded(
               child: Text(
                 title,
-                style:  TextStyle(
-                  fontSize: 15,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
+                  fontFamily: "sf_Pro",
+                  color: AllColor.black,
                 ),
               ),
             ),
             Switch(
+              activeColor: Colors.white,
+              activeTrackColor: AllColor.primary,
               value: value,
               onChanged: onChanged,
             ),
@@ -480,37 +297,73 @@ class _SettingsSwitchTile extends StatelessWidget {
   }
 }
 
-class _BottomNavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+/// ───────────── GENERAL Group Card ─────────────
 
-  const _BottomNavItem({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
+class _GroupedSettingsCard extends StatelessWidget {
+  final List<_GroupedSettingsTile> tiles;
+
+  const _GroupedSettingsCard({required this.tiles});
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? const Color(0xFF4A6CFF) : const Color(0xFF9CA3AF);
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (int i = 0; i < tiles.length; i++) ...[
+            //if (i != 0)
+              // const Divider(
+              //   height: 0,
+              //   thickness: 0.5,
+              //   color: Color(0xFFE5E7EB),
+              // ),
+            tiles[i],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _GroupedSettingsTile extends StatelessWidget {
+  final Widget leading;
+  final String title;
+  final VoidCallback? onTap;
+
+  const _GroupedSettingsTile({
+    Key? key,
+    required this.leading,
+    required this.title,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: SizedBox(
-        width: 60,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        child: Row(
           children: [
-            Icon(icon, size: 22, color: color),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
+            leading,
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "sf_Pro",
+                  color: AllColor.black,
+                ),
               ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: AllColor.black,
+              size: 24.sp,
             ),
           ],
         ),
