@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/core/widget/global_deals_banner.dart';
 import '../../onbording/widget/CustomButton.dart';
 import '../widget/personal_document.dart';
 
@@ -133,7 +134,7 @@ class _FilesScreenState extends State<FilesScreen> {
               ),
               SizedBox(height: 14.h),
               // Promo banner
-              const _DealsBanner(),
+              const GlobalDealsBanner(),
               SizedBox(height: 14.h),
               // Content
               Expanded(
@@ -525,91 +526,7 @@ class _SegmentedTabs extends StatelessWidget {
 }
 
 /// ───────────────── Promo Banner ─────────────────
-class _DealsBanner extends StatelessWidget {
-  const _DealsBanner();
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14.r),
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [Color(0xFFE4FFD7), Color(0xFFEAF1FF)],
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              'assets/images/giftbox.svg',
-              width: 28.w,
-              height: 28.w,
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'New Year Deals!',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "sf_Pro",
-                      color: AllColor.black,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    '20% OFF',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AllColor.black,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "sf_Pro",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                height: 38.h,
-                width: 106.w,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 14.w,
-                  vertical: 8.h,
-                ),
-                decoration: BoxDecoration(
-                  color: AllColor.primary,
-                  borderRadius: BorderRadius.circular(30.r),
-                  border: Border.all(width: 1.w, color: AllColor.primary),
-                ),
-                child: Center(
-                  child: Text(
-                    'Buy Now',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "sf_Pro",
-                      color: AllColor.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 /// ───────────────── Files List ─────────────────
 class _FilesList extends StatelessWidget {

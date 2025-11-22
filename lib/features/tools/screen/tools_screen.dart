@@ -37,7 +37,7 @@ class ToolsScreen extends StatelessWidget {
         cardColor: const Color(0xFFE6F2FF),
         iconBg: const Color(0xFF4C9BFF),
         onTap: () {
-          context.push(MargePdf45.routeName);
+          context.push(MargePdf45.routeName,extra: ScreenName.marge);
         },
       ),
       ToolItem(
@@ -45,7 +45,7 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/splitpdf.svg',
         cardColor: const Color(0xFFE7F7E9),
         iconBg: const Color(0xFF52B46E),
-        onTap: () {},
+        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.split);},
       ),
       ToolItem(
         title: 'Image to PDF',
@@ -59,7 +59,7 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/lock.svg',
         cardColor: const Color(0xFFFFF1DB),
         iconBg: const Color(0xFFF6B348),
-        onTap: () {},
+        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.lock);},
       ),
       ToolItem(
         title: 'Unlock PDF',
@@ -67,7 +67,7 @@ class ToolsScreen extends StatelessWidget {
         cardColor: const Color(0xFFE7ECF6),
         iconBg: const Color(0xFF6173AA),
         isPremium: true,
-        onTap: () {},
+        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.unlock);},
       ),
       ToolItem(
         title: 'Extract Text',

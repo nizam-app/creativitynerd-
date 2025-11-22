@@ -30,10 +30,13 @@ class CustomDocumentList extends ConsumerWidget {
 
   /// true => show "Import from other app" card
   final bool isFromShow;
+  final bool isMyDeviceShow;
+  final bool showLock;
 
   /// true => arrow icon (look screen),
   /// false => circle + check (multi select) => image 1 design
-  final bool isShowLook;
+  final bool showArrow;
+  // final bool isShowSelected;
 
   final VoidCallback? onMyDeviceTap;
   final VoidCallback? onImportFromOtherAppTap;
@@ -48,8 +51,12 @@ class CustomDocumentList extends ConsumerWidget {
     Key? key,
     required this.documents,
     this.isFromShow = false,
-    this.isShowLook = false,
+    this.showArrow = false,
+    this.isMyDeviceShow = true,
+    this.showLock = false,
+    // this.isShowSelected = false,
     this.onMyDeviceTap,
+    
     this.onImportFromOtherAppTap,
     this.onDocumentTap,
     this.onSelectionChanged,
@@ -63,7 +70,7 @@ class CustomDocumentList extends ConsumerWidget {
       final doc = documents[index];
 
       // multi-select mode (circle design)
-      if (!isShowLook) {
+      if (!showArrow) {
         ref.read(documentSelectionProvider.notifier).toggle(index);
 
         if (onSelectionChanged != null) {
@@ -83,7 +90,7 @@ class CustomDocumentList extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          if (isMyDeviceShow == true)   Text(
             'Select Document',
             style: TextStyle(
               fontSize: 12.sp,
@@ -91,9 +98,9 @@ class CustomDocumentList extends ConsumerWidget {
               color: AllColor.black,
             ),
           ),
-          SizedBox(height: 8.h),
+          if (isMyDeviceShow == true)  SizedBox(height: 8.h),
 
-          _MyDeviceTile(onTap: onMyDeviceTap),
+          if (isMyDeviceShow == true)    _MyDeviceTile(onTap: onMyDeviceTap),
 
           if (isFromShow) SizedBox(height: 8.h),
 
@@ -110,7 +117,8 @@ class CustomDocumentList extends ConsumerWidget {
               padding: EdgeInsets.only(bottom: 8.h),
               child: _DocumentRow(
                 item: doc,
-                showArrow: isShowLook,
+                showLock: showLock,
+                showArrow: showArrow,
                 selected: selected,
                 onTap: () => handleDocTap(index),
               ),
@@ -184,24 +192,16 @@ class _ImportFromOtherAppTile extends StatelessWidget {
       child: Container(
         height: 80.h,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.black.withOpacity(0.03),
           borderRadius: BorderRadius.circular(16.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
           children: [
-            Container(
-              width: 48.w,
-              height: 56.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE5EEFF),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Icon(
-                Icons.insert_drive_file_rounded,
-                color: const Color(0xFF3F63E8),
-                size: 24.sp,
-              ),
+            SvgPicture.asset(
+              'assets/images/tool/Frame.svg',
+              width: 58.w,
+              height: 58.h,
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -230,12 +230,14 @@ class _ImportFromOtherAppTile extends StatelessWidget {
 class _DocumentRow extends StatelessWidget {
   final DocumentItem item;
   final bool showArrow;
+  final bool showLock;
   final bool selected;
   final VoidCallback? onTap;
 
   const _DocumentRow({
     required this.item,
     required this.showArrow,
+    required this.showLock,
     required this.selected,
     this.onTap,
   });
@@ -254,20 +256,35 @@ class _DocumentRow extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 12.h),
         child: Row(
           children: [
-            // thumbnail
-            ClipRRect(
+            // --------- Leading (image OR lock) ----------
+            showLock
+                ? Container(
+              width: 56.w,
+              height: 56.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF2F2F7),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                Icons.lock,
+                size: 24.sp,
+                color: const Color(0xFF777777),
+              ),
+            )
+                : ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(2.r)),
-              child:
-                  item.thumbnail ??
+              child: item.thumbnail ??
                   Image.asset(
                     'assets/images/tool/Rectangle7.png',
                     width: 56.w,
                     height: 56.h,
+                    fit: BoxFit.cover,
                   ),
             ),
+
             SizedBox(width: 12.w),
 
-            // title + info
+            // --------- title + info ----------
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -295,7 +312,7 @@ class _DocumentRow extends StatelessWidget {
               ),
             ),
 
-            // trailing
+            // --------- trailing ----------
             if (showArrow)
               Icon(
                 Icons.chevron_right_rounded,
@@ -308,9 +325,8 @@ class _DocumentRow extends StatelessWidget {
                 height: 24.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: selected
-                      ? ToolFlowColor.royal_Blue
-                      : AllColor.white, // filled blue when selected
+                  color:
+                  selected ? ToolFlowColor.royal_Blue : AllColor.white,
                   border: Border.all(
                     color: selected
                         ? ToolFlowColor.royal_Blue
@@ -320,7 +336,11 @@ class _DocumentRow extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: selected
-                    ? Icon(Icons.check, size: 14.sp, color: Colors.white)
+                    ? Icon(
+                  Icons.check,
+                  size: 14.sp,
+                  color: Colors.white,
+                )
                     : const SizedBox.shrink(),
               ),
           ],

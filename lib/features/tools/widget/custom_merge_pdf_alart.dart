@@ -4,27 +4,50 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/tool_flow_color.dart';
 
-Future<String?> showMergePdfNameDialog(BuildContext context) async {
+Future<String?> showMergePdfNameDialog(
+    BuildContext context, {
+      required String screenName,      // 'merge' / 'lock'
+      String? fileName,               // lock হলে উপরের ছোট টেক্সট
+    }) async {
   final controller = TextEditingController();
 
   final result = await showCupertinoDialog<String>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => _MergePdfNameAlert(controller: controller),
+    builder: (_) => _MergePdfNameAlert(
+      controller: controller,
+      screenName: screenName,
+      fileName: fileName,
+    ),
   );
 
   controller.dispose();
-  return result; // null == cancel, otherwise filename
+  return result; // null == cancel, otherwise text
 }
 
-class _MergePdfNameAlert extends StatelessWidget {
-  final TextEditingController controller;
 
-  const _MergePdfNameAlert({required this.controller});
+class _MergePdfNameAlert extends StatefulWidget {
+  final TextEditingController controller;
+  final String screenName;   // 'merge' / 'lock'
+  final String? fileName;
+
+  const _MergePdfNameAlert({
+    required this.controller,
+    required this.screenName,
+    this.fileName,
+  });
+
+  @override
+  State<_MergePdfNameAlert> createState() => _MergePdfNameAlertState();
+}
+
+class _MergePdfNameAlertState extends State<_MergePdfNameAlert> {
+  bool _obscure = true;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final bool isLock = widget.screenName.toLowerCase() == 'lock' || widget.screenName.toLowerCase() == "unlock";
+  
 
     return Center(
       child: Material(
@@ -47,7 +70,7 @@ class _MergePdfNameAlert extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        'Merge PDF',
+                        isLock ? 'Set Password' : 'Merge PDF',
                         style: TextStyle(
                           fontSize: 17.sp,
                           fontWeight: FontWeight.w600,
@@ -56,19 +79,25 @@ class _MergePdfNameAlert extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 14.h),
+
+                    // উপরের ছোট টেক্সট
                     Text(
-                      'PDF File Name',
+                      isLock
+                          ? (widget.fileName ?? 'PDF File')
+                          : 'PDF File Name',
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: ToolFlowColor.black,
                       ),
                     ),
                     SizedBox(height: 6.h),
+
+                    // TextField (normal / password)
                     CupertinoTextField(
-                      cursorHeight: 32.h,
-                      cursorWidth: 238.w,
-                      controller: controller,
-                      placeholder: 'Enter file name....',
+                      controller: widget.controller,
+                      obscureText: isLock ? _obscure : false,
+                      placeholder:
+                      isLock ? 'Enter Password' : 'Enter file name....',
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w400,
@@ -81,6 +110,27 @@ class _MergePdfNameAlert extends StatelessWidget {
                         color: const Color(0xFFF2F2F7),
                         borderRadius: BorderRadius.circular(6.r),
                       ),
+
+                      // শুধু lock মোডে eye icon
+                      suffix: isLock
+                          ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obscure = !_obscure;
+                          });
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 6.w),
+                          child: Icon(
+                            _obscure
+                                ? CupertinoIcons.eye
+                                : CupertinoIcons.eye_slash,
+                            size: 18.sp,
+                            color: const Color(0xFF8E8E93),
+                          ),
+                        ),
+                      )
+                          : null,
                     ),
                   ],
                 ),
@@ -88,7 +138,7 @@ class _MergePdfNameAlert extends StatelessWidget {
 
               Divider(height: 1, color: CupertinoColors.separator),
 
-              // ----- Bottom buttons (Cancel | Ok) -----
+              // ----- Bottom buttons (Cancel | Ok / Unlock PDF) -----
               SizedBox(
                 height: 48.h,
                 child: Row(
@@ -97,7 +147,8 @@ class _MergePdfNameAlert extends StatelessWidget {
                       child: CupertinoButton(
                         padding: EdgeInsets.zero,
                         onPressed: () async {
-                          context.pop();
+                          // আগের মতোই Cancel flow
+                          context.pop(); // dialog বন্ধ
                           final discard = await showDiscardConfirmDialog(
                             context,
                           );
@@ -121,10 +172,11 @@ class _MergePdfNameAlert extends StatelessWidget {
                       child: CupertinoButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
-                          Navigator.of(context).pop(controller.text.trim());
+                          Navigator.of(context)
+                              .pop(widget.controller.text.trim());
                         },
                         child: Text(
-                          'Ok',
+                          isLock ? 'Unlock PDF' : 'Ok',
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -143,6 +195,7 @@ class _MergePdfNameAlert extends StatelessWidget {
     );
   }
 }
+
 
 Future<bool?> showDiscardConfirmDialog(BuildContext context) {
   return showCupertinoDialog<bool>(
