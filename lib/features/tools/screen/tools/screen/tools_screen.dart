@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
-import 'package:pdf_scanner/features/tools/widget/premiumDialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/widget/upgrade_plan_card.dart';
+import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/core/widget/upgrade_plan_card.dart';
+import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
 class ToolItem {
   final String title;
@@ -12,7 +12,7 @@ class ToolItem {
   final Color cardColor;
   final Color iconBg;
   final VoidCallback onTap;
-  final bool isPremium;            // 🔹 শুধু Unlock PDF এর জন্য true
+  final bool isPremium; // 🔹 শুধু Unlock PDF এর জন্য true
 
   ToolItem({
     required this.title,
@@ -20,7 +20,7 @@ class ToolItem {
     required this.cardColor,
     required this.iconBg,
     required this.onTap,
-    this.isPremium = false,        // ডিফল্ট false
+    this.isPremium = false, // ডিফল্ট false
   });
 }
 
@@ -36,7 +36,9 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/mergepdf.svg',
         cardColor: const Color(0xFFE6F2FF),
         iconBg: const Color(0xFF4C9BFF),
-        onTap: () {},
+        onTap: () {
+          context.push(MargePdf45.routeName);
+        },
       ),
       ToolItem(
         title: 'Split PDF',
@@ -65,9 +67,7 @@ class ToolsScreen extends StatelessWidget {
         cardColor: const Color(0xFFE7ECF6),
         iconBg: const Color(0xFF6173AA),
         isPremium: true,
-        onTap: () {
-
-        },
+        onTap: () {},
       ),
       ToolItem(
         title: 'Extract Text',
@@ -131,7 +131,7 @@ class ToolsScreen extends StatelessWidget {
                 ),
               ),
 
-             const UpgradePlanCard(),
+              const UpgradePlanCard(),
 
               SizedBox(height: 20.h),
               SizedBox(height: 24.h),
@@ -167,7 +167,6 @@ class ToolCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Material(
       color: item.cardColor,
       borderRadius: BorderRadius.circular(16.r),
@@ -180,7 +179,6 @@ class ToolCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               if (item.isPremium)
                 Align(
                   alignment: Alignment.centerRight,
@@ -200,12 +198,11 @@ class ToolCard extends StatelessWidget {
               else
                 SizedBox(height: 18.h), // height balance রাখার জন্য
 
-                SvgPicture.asset(
-                  item.svgAsset,
-                  width: 34.w,
-                  height: 34.h,
-                  fit: BoxFit.cover,
-
+              SvgPicture.asset(
+                item.svgAsset,
+                width: 34.w,
+                height: 34.h,
+                fit: BoxFit.cover,
               ),
               SizedBox(height: 10.h),
               Text(
@@ -227,6 +224,3 @@ class ToolCard extends StatelessWidget {
     );
   }
 }
-
-
-

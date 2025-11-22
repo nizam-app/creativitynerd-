@@ -8,7 +8,7 @@ import 'package:pdf_scanner/features/add/screen/add_screen.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/settings/seceen/settings_screen.dart';
-import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
+import 'package:pdf_scanner/features/tools/screen/tools/screen/tools_screen.dart';
 
 
 final selectedIndex = StateProvider<int>((ref) => 0);
