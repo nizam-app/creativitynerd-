@@ -10,6 +10,8 @@ import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
 import 'package:pdf_scanner/features/settings/seceen/settings_screen.dart';
 import 'package:pdf_scanner/features/splash/screen/splash_screen.dart';
+import 'package:pdf_scanner/features/tools/screen/Congratulations_screen.dart';
+import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
 
@@ -18,8 +20,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-
-  static final String initial = SplashScreen.routeName;
+  static final String initial = ToolsScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -29,12 +30,10 @@ class AppRouter {
         location: badPath,
         error: state.error,
         onRetry: () => context.go(initial),
-        onReport: () {
-        },
+        onReport: () {},
       );
     },
     routes: [
-
       GoRoute(
         path: SplashScreen.routeName,
         name: SplashScreen.routeName,
@@ -46,7 +45,6 @@ class AppRouter {
         name: OnboardingScreen.routeName,
         builder: (context, state) => const OnboardingScreen(),
       ),
-
 
       GoRoute(
         path: HomeScreen.routeName,
@@ -60,9 +58,9 @@ class AppRouter {
       ),
 
       GoRoute(
-        path:  PersonalDocumentsScreen.routeName,
-        name:  PersonalDocumentsScreen.routeName,
-        builder: (context, state) => const  PersonalDocumentsScreen(),
+        path: PersonalDocumentsScreen.routeName,
+        name: PersonalDocumentsScreen.routeName,
+        builder: (context, state) => const PersonalDocumentsScreen(),
       ),
 
       GoRoute(
@@ -75,9 +73,9 @@ class AppRouter {
         path: CameraScreen.routeName,
         name: CameraScreen.routeName,
         builder: (context, state) => const CameraScreen(),
-       ),
+      ),
 
-        GoRoute(
+      GoRoute(
         path: EditFilterScreen.routeName,
         name: EditFilterScreen.routeName,
         builder: (context, state) => const EditFilterScreen(),
@@ -101,12 +99,12 @@ class AppRouter {
       ),
 
 
+
       GoRoute(
         path: PhotoScan.routeName,
         name: PhotoScan.routeName,
         builder: (context, state) => const PhotoScan(),
       ),
-
 
       GoRoute(
         path: SettingsScreen.routeName,
@@ -123,11 +121,18 @@ class AppRouter {
       GoRoute(
         path: BottomNavBar.routeName,
         name: BottomNavBar.routeName,
-        builder: (context, state) =>  BottomNavBar(child: HomeScreen(), ),
+        builder: (context, state) => BottomNavBar(child: HomeScreen()),
       ),
-
-
+      GoRoute(
+        path: MargePdf45.routeName,
+        name: MargePdf45.routeName,
+        builder: (context, state) => MargePdf45(isCheckScreenName: state.extra as ScreenName),
+      ),
+      GoRoute(
+        path: CongratulationsScreen.routeName,
+        name: CongratulationsScreen.routeName,
+        builder: (context, state) => CongratulationsScreen(isCheckScreenName: state.extra as ScreenName),
+      ),
     ],
   );
 }
-

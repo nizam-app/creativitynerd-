@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pdf_scanner/core/constants/color_control/tool_flow_color.dart';
 import 'package:pdf_scanner/routes/app_routes.dart';
 import 'core/constants/color_control/all_color.dart';
 import 'core/constants/color_control/theme_color_controller.dart';
@@ -18,15 +19,16 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: ThemeData(
-        brightness:  Brightness.light,
+        brightness:  Brightness.light,   
         colorScheme: ColorScheme.light(
           primary: AllColor.black,
           onPrimary:  AllColor.white,
           secondary: ThemeColorController.green,
           onSecondary: AllColor.white,
           surface: ThemeColorController.grey,
-          onSurface: ThemeColorController.white,
+          onSurface: ThemeColorController.white, 
         ),
+        
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Color(0xffA49ACF).withOpacity(0.05),
@@ -94,7 +96,7 @@ class _AppState extends State<App> {
             color: AllColor.black,
           ),
         ),
-        scaffoldBackgroundColor: AllColor.white,
+        scaffoldBackgroundColor: ToolFlowColor.backGroundColor,
       ),
       routerConfig: AppRouter.appRouter,
       debugShowCheckedModeBanner: false,
