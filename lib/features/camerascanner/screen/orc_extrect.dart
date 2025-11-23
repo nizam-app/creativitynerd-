@@ -7,9 +7,11 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PhotoScan extends StatelessWidget {
-  const PhotoScan({super.key});
-  static const routeName = '/photo_scan';
+import '../widget/processingPopup.dart';
+
+class OrcExtrect extends StatelessWidget {
+  const OrcExtrect({super.key});
+  static const routeName = '/orcExtrect';
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +20,15 @@ class PhotoScan extends StatelessWidget {
       appBar: CustomEditAppBar(
         backgroundColor: AllColor.black,
         textColor: AllColor.white,
-        title: "Crop",
+        title: "OCR Extrect ",
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: () {
-             // context.push(CropSaveScreen.routeName);
+              ProcessingPopup.show(context);
             },
             child: Text(
-              "Continue",
+              "Done",
               style: TextStyle(
                 fontFamily: "sf_Pro",
                 fontWeight: FontWeight.w600,
@@ -74,20 +76,20 @@ class PhotoScan extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _BottomAction(
-                        svgAsset: 'assets/images/photo_scan.svg',
-                        label: 'Auto crop',
+                        svgAsset: 'assets/images/copy_icon.svg',
+                        label: 'Copy',
                         isActive: true,
                       ),
 
                       _BottomAction(
-                        svgAsset: 'assets/images/retake_icon.svg',
-                        label: 'Rotake',
+                        svgAsset: 'assets/images/edit_icon.svg',
+                        label: 'Edit',
                         isActive: false,
                       ),
 
                       _BottomAction(
-                        svgAsset: 'assets/images/rotate_icon.svg',
-                        label: 'Rotate',
+                        svgAsset: 'assets/images/export_icon.svg',
+                        label: 'Export',
                         isActive: false,
                       ),
 

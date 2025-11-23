@@ -4,6 +4,7 @@ import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart'
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
@@ -22,7 +23,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = ToolsScreen.routeName;
+  static final String initial = SplashScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -82,12 +83,20 @@ class AppRouter {
         name: EditFilterScreen.routeName,
         builder: (context, state) => const EditFilterScreen(),
       ),
-
       GoRoute(
         path: CropScreen.routeName,
         name: CropScreen.routeName,
         builder: (context, state) => const CropScreen(),
       ),
+
+      GoRoute(
+        path: OrcExtrect.routeName,
+        name: OrcExtrect.routeName,
+        builder: (context, state) => const OrcExtrect(),
+      ),
+
+
+
       GoRoute(
         path: CropSaveScreen.routeName,
         name: CropSaveScreen.routeName,

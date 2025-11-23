@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/widget/global_image_add_from_gelary.dart';
 
+import '../../../core/constants/color_control/tool_flow_color.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const String routeName = '/home'; // ✅ router-এর সাথে統一
@@ -35,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF6F8FC),
+     // backgroundColor: Color(0xFFF6F8FC),
+      backgroundColor: ToolFlowColor.backGroundColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -107,24 +110,39 @@ class _TopRow extends StatelessWidget {
           children: [
             const _UpgradePill(),
             const Spacer(),
-            Material(
-              color: AllColor.gery100.withOpacity(0.10),
-              shape: const CircleBorder(),
-              elevation: 0,
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () {},
-                child: Padding(
-                  padding: EdgeInsets.all(16.r),
-                  child: Icon(
-                    Icons.more_horiz,
-                    color: AllColor.black,
-                    size: 18.sp,
-                  ),
+        Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          elevation: 0,
+          child: Ink(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFF7F7F7),
+                  Color(0x80FFFFFF),
+                ],
+                stops: [0.0, 1.0],
+              ),
+            ),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.all(16.r),
+                child: Icon(
+                  Icons.more_horiz,
+                  color: AllColor.black,
+                  size: 18.sp,
                 ),
               ),
             ),
-          ],
+          ),
+        ),
+
+        ],
         ),
       ),
     );
@@ -397,29 +415,40 @@ class _UpgradePill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.r, vertical: 6.r),
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: AllColor.orange,
-        borderRadius: BorderRadius.circular(30.r),
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Color(0xFFEC6435), // left
+            Color(0xFFF3B561), // right
+          ],
+          stops: [0.0, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(999.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Icon(Icons.emoji_events_rounded, size: 14.sp, color: const Color(0xFFFC8E2B)),
           SvgPicture.asset(
             'assets/images/Vector.svg',
-            width: 14.sp,
-            height: 14.sp,
-            color: AllColor.white,
+            width: 16.sp,
+            height: 16.sp,
+            colorFilter: const ColorFilter.mode(
+              AllColor.white,
+              BlendMode.srcIn,
+            ),
           ),
-          SizedBox(width: 6.w),
+          SizedBox(width: 8.w),
           Text(
             'Upgrade',
             style: TextStyle(
               color: AllColor.white,
               fontWeight: FontWeight.w600,
               fontFamily: "sf_Pro",
-              fontSize: 13.sp,
+              fontSize: 16.sp,
+              height: 1.0,
             ),
           ),
         ],
@@ -427,6 +456,7 @@ class _UpgradePill extends StatelessWidget {
     );
   }
 }
+
 
 class _RoundIconButton extends StatelessWidget {
   final Widget child;
@@ -492,10 +522,10 @@ class _SearchField extends StatelessWidget {
           vertical: 10.r,
           horizontal: 16.r,
         ), // Ensure the text is centered with proper padding
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: AllColor.gery, width: 1.w),
-        ),
+        // border: OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(14.r),
+        //   borderSide: BorderSide(color: AllColor.gery, width: 1.w),
+        // ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14.r),
           borderSide: BorderSide(
@@ -506,8 +536,8 @@ class _SearchField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14.r),
           borderSide: BorderSide(
-            color: AllColor.gery100.withOpacity(0.10),
-            width: 1.w,
+            color: AllColor.gery100.withOpacity(0.20),
+            width: 0.5.w,
           ),
         ),
       ),
