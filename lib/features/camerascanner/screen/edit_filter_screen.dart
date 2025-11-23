@@ -1,28 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
 import '../../../core/widget/CustomAppbar.dart';
 
 /// ───────────────── Filter helper ─────────────────
 
 const List<double> _greyMatrix = <double>[
-  0.2126, 0.7152, 0.0722, 0, 0,
-  0.2126, 0.7152, 0.0722, 0, 0,
-  0.2126, 0.7152, 0.0722, 0, 0,
-  0, 0, 0, 1, 0,
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  0,
 ];
 
 ColorFilter? filterFromName(String name) {
   switch (name) {
     case 'Magic 1':
-      return const ColorFilter.mode(
-        Color(0x3384fff8),
-        BlendMode.modulate,
-      );
+      return const ColorFilter.mode(Color(0x3384fff8), BlendMode.modulate);
     case 'Magic 2':
       return const ColorFilter.mode(
         Color(0x33FFA96B), // হালকা লাল টোন
@@ -93,7 +107,7 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
         actions: [
           TextButton(
             onPressed: () {
-
+              context.push(MargePdf45.routeName, extra: ScreenName.reorder);
             },
             child: Text(
               "Done",
@@ -116,7 +130,7 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
           Expanded(
             child: Center(
               child: Container(
-               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12.r),
@@ -152,7 +166,9 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
+                            horizontal: 10.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(14.r),
@@ -205,7 +221,7 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
                             ),
                             SizedBox(width: 6.w),
@@ -349,8 +365,7 @@ class _FilterThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isBW = label == 'B&W';
 
-    Color borderColor =
-    selected ? const Color(0xFF0A84FF) : Colors.transparent;
+    Color borderColor = selected ? const Color(0xFF0A84FF) : Colors.transparent;
 
     BoxDecoration thumbDecoration;
 
@@ -367,10 +382,7 @@ class _FilterThumbnail extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: borderColor, width: 2),
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFFED5564),
-            Color(0xFFF5A623),
-          ],
+          colors: [Color(0xFFED5564), Color(0xFFF5A623)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -413,11 +425,8 @@ class _BottomActionButton extends StatelessWidget {
   final Widget icon;
   final String label;
 
-  const _BottomActionButton({
-    Key? key,
-    required this.icon,
-    required this.label,
-  }) : super(key: key);
+  const _BottomActionButton({Key? key, required this.icon, required this.label})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -438,8 +447,6 @@ class _BottomActionButton extends StatelessWidget {
     );
   }
 }
-
-
 
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';

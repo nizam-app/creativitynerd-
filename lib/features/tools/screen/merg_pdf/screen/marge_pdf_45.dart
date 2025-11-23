@@ -13,7 +13,7 @@ import 'package:pdf_scanner/features/tools/widget/custom_document_list.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_merge_pdf_alart.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_top_back_button.dart';
 
-enum ScreenName { marge, split, lock, unlock }
+enum ScreenName { marge, split, lock, unlock, reorder }
 
 extension ScreenNameText on ScreenName {
   String get title {
@@ -26,6 +26,8 @@ extension ScreenNameText on ScreenName {
         return 'Lock PDF';
       case ScreenName.unlock:
         return 'Unlock PDF';
+      case ScreenName.reorder:
+        return 'Reorder pages';
     }
   }
 }
@@ -141,6 +143,7 @@ class MargePdf45 extends ConsumerWidget {
                               fit: BoxFit.cover,
                             ),
                             isSelected: selected,
+
                             onTap: () {
                               ref
                                   .read(documentSelectionProvider.notifier)
