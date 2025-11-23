@@ -10,7 +10,9 @@ import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
 import 'package:pdf_scanner/features/settings/seceen/settings_screen.dart';
 import 'package:pdf_scanner/features/splash/screen/splash_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/Congratulations_screen.dart';
+import 'package:pdf_scanner/features/tools/screen/auto_crop_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
+import 'package:pdf_scanner/features/tools/screen/plan/screen/upgrade_plan_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
 
@@ -117,12 +119,24 @@ class AppRouter {
       GoRoute(
         path: MargePdf45.routeName,
         name: MargePdf45.routeName,
-        builder: (context, state) => MargePdf45(isCheckScreenName: state.extra as ScreenName),
+        builder: (context, state) =>
+            MargePdf45(isCheckScreenName: state.extra as ScreenName),
       ),
       GoRoute(
         path: CongratulationsScreen.routeName,
         name: CongratulationsScreen.routeName,
-        builder: (context, state) => CongratulationsScreen(isCheckScreenName: state.extra as ScreenName),
+        builder: (context, state) =>
+            CongratulationsScreen(isCheckScreenName: state.extra as ScreenName),
+      ),
+      GoRoute(
+        path: UpgradePlanScreen.routeName,
+        name: UpgradePlanScreen.routeName,
+        builder: (context, state) => UpgradePlanScreen(),
+      ),
+      GoRoute(
+        path: AutoCropScreen.routeName,
+        name: AutoCropScreen.routeName,
+        builder: (context, state) => AutoCropScreen(),
       ),
     ],
   );

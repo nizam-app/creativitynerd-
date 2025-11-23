@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Add this import
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Add this import
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/constants/color_control/tool_flow_color.dart';
 import 'package:pdf_scanner/core/widget/globalCustomButton.dart';
-import 'package:pdf_scanner/features/tools/screen/merg_pdf/data/ducment_selecd_data.dart';
 import 'package:pdf_scanner/features/tools/screen/Congratulations_screen.dart';
+import 'package:pdf_scanner/features/tools/screen/merg_pdf/data/ducment_selecd_data.dart';
 import 'package:pdf_scanner/features/tools/screen/model/document_list_model.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_document_list.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_merge_pdf_alart.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_top_back_button.dart';
 
-enum  ScreenName {
-  marge ,
-  split,
-  lock,
-  unlock
+enum ScreenName { marge, split, lock, unlock }
+
+extension ScreenNameText on ScreenName {
+  String get title {
+    switch (this) {
+      case ScreenName.marge:
+        return 'Marge PDF';
+      case ScreenName.split:
+        return 'Split PDF';
+      case ScreenName.lock:
+        return 'Lock PDF';
+      case ScreenName.unlock:
+        return 'Unlock PDF';
+    }
+  }
 }
 
 class MargePdf45 extends ConsumerWidget {
@@ -37,98 +47,112 @@ class MargePdf45 extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomTopBarBackButton(title:isCheckScreenName.name.toString()),
-           if (isCheckScreenName == ScreenName.marge || isCheckScreenName == ScreenName.lock || isCheckScreenName == ScreenName.unlock)  Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CustomDocumentList(
-                      documents: [
-                        DocumentItem(
-                          title: '04 Aug, document 1',
-                          pages: 25,
-                          size: '536 KB',
-                        ),
-                        DocumentItem(
-                          title: '04 Aug, document 2',
-                          pages: 12,
-                          size: '210 KB',
-                        ),
-                        DocumentItem(
-                          title: '04 Aug, document 3',
-                          pages: 8,
-                          size: '120 KB',
-                        ),
-                      ],
-                      isFromShow:isCheckScreenName == ScreenName.lock || isCheckScreenName == ScreenName.unlock? true: false,
-                      showLock:isCheckScreenName == ScreenName.unlock? true: false,
-                      showArrow: isCheckScreenName == ScreenName.unlock? true: false,
+            CustomTopBarBackButton(title: isCheckScreenName.title),
+            if (isCheckScreenName == ScreenName.marge ||
+                isCheckScreenName == ScreenName.lock ||
+                isCheckScreenName == ScreenName.unlock)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CustomDocumentList(
+                        documents: [
+                          DocumentItem(
+                            title: '04 Aug, document 1',
+                            pages: 25,
+                            size: '536 KB',
+                          ),
+                          DocumentItem(
+                            title: '04 Aug, document 2',
+                            pages: 12,
+                            size: '210 KB',
+                          ),
+                          DocumentItem(
+                            title: '04 Aug, document 3',
+                            pages: 8,
+                            size: '120 KB',
+                          ),
+                        ],
+                        isFromShow:
+                            isCheckScreenName == ScreenName.lock ||
+                                isCheckScreenName == ScreenName.unlock
+                            ? true
+                            : false,
+                        showLock: isCheckScreenName == ScreenName.unlock
+                            ? true
+                            : false,
+                        showArrow: isCheckScreenName == ScreenName.unlock
+                            ? true
+                            : false,
 
-
-                      onDocumentTap: (doc) async{
-                        if (isCheckScreenName == ScreenName.unlock) {
-                          final name = await showMergePdfNameDialog(context, screenName: isCheckScreenName.name);
-                          if (name != null && name.isNotEmpty) {
-                            context.push(CongratulationsScreen.routeName, extra: isCheckScreenName);
+                        onDocumentTap: (doc) async {
+                          if (isCheckScreenName == ScreenName.unlock) {
+                            final name = await showMergePdfNameDialog(
+                              context,
+                              screenName: isCheckScreenName.name,
+                            );
+                            if (name != null && name.isNotEmpty) {
+                              context.push(
+                                CongratulationsScreen.routeName,
+                                extra: isCheckScreenName,
+                              );
+                            }
                           }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16.w, 25.h, 16.w, 2.h),
+                      child: Text(
+                        'Select Page',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF9BA4B5),
+                        ),
+                      ),
+                    ),
 
-                          
-                        }  
-                      },
+                    // নিচের অংশ vertical scroll হবে
+                    Expanded(
+                      child: GridView.builder(
+                        padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // প্রতি row-তে 2টা পেজ
+                          crossAxisSpacing: 12.w,
+                          mainAxisSpacing: 12.h,
+                          childAspectRatio: (180.w / 240.h),
+                        ),
+                        itemCount: 10, // যত পেজ আছে সেট করো
+                        itemBuilder: (context, index) {
+                          final selected = selectedIndexes.contains(index);
+
+                          return CusotmSplitPdf(
+                            thumbnail: SvgPicture.asset(
+                              'assets/images/tool/Rectangle.svg',
+                              fit: BoxFit.cover,
+                            ),
+                            isSelected: selected,
+                            onTap: () {
+                              ref
+                                  .read(documentSelectionProvider.notifier)
+                                  .toggle(index);
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
-            ) else
-             Expanded(
-               child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: [
-                   Padding(
-                     padding: EdgeInsets.fromLTRB(16.w, 25.h, 16.w, 2.h),
-                     child: Text(
-                       'Select Page',
-                       style: TextStyle(
-                         fontSize: 14.sp,
-                         fontWeight: FontWeight.w500,
-                         color: const Color(0xFF9BA4B5),
-                       ),
-                     ),
-                   ),
-
-                   // নিচের অংশ vertical scroll হবে
-                   Expanded(
-                     child: GridView.builder(
-                       padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
-                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                         crossAxisCount: 2,          // প্রতি row-তে 2টা পেজ
-                         crossAxisSpacing: 12.w,
-                         mainAxisSpacing: 12.h,
-                         childAspectRatio: (180.w / 240.h),
-                       ),
-                       itemCount: 10, // যত পেজ আছে সেট করো
-                       itemBuilder: (context, index) {
-                         final selected = selectedIndexes.contains(index);
-
-                         return CusotmSplitPdf(
-                           thumbnail: SvgPicture.asset(
-                             'assets/images/tool/Rectangle.svg',
-                             fit: BoxFit.cover,
-                           ),
-                           isSelected: selected,
-                           onTap: () {
-                             ref
-                                 .read(documentSelectionProvider.notifier)
-                                 .toggle(index);
-                           },
-                         );
-                       },
-                     ),
-                   ),
-                 ],
-               ),
-             )
-
           ],
         ),
       ),
@@ -150,9 +174,15 @@ class MargePdf45 extends ConsumerWidget {
                 ), // হালকা নীল (selected না থাকলে)
           onPressed: () async {
             if (!hasSelection) return;
-            final name = await showMergePdfNameDialog(context, screenName: isCheckScreenName.name);
+            final name = await showMergePdfNameDialog(
+              context,
+              screenName: isCheckScreenName.name,
+            );
             if (name != null && name.isNotEmpty) {
-              context.push(CongratulationsScreen.routeName, extra: isCheckScreenName);
+              context.push(
+                CongratulationsScreen.routeName,
+                extra: isCheckScreenName,
+              );
             }
           },
         ),
@@ -162,8 +192,8 @@ class MargePdf45 extends ConsumerWidget {
 }
 
 class CusotmSplitPdf extends StatelessWidget {
-  final Widget thumbnail;      // PDF page preview image
-  final bool isSelected;       // true = blue check, false = empty circle
+  final Widget thumbnail; // PDF page preview image
+  final bool isSelected; // true = blue check, false = empty circle
   final VoidCallback? onTap;
   final double? width;
 
@@ -201,9 +231,7 @@ class CusotmSplitPdf extends StatelessWidget {
           child: Stack(
             children: [
               // full image
-              Positioned.fill(
-                child: thumbnail,
-              ),
+              Positioned.fill(child: thumbnail),
 
               // bottom overlay (image-এর উপরেই)
               Positioned(
@@ -227,7 +255,7 @@ class CusotmSplitPdf extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: isSelected
                         ? const Color(0xFF4E6BFA) // selected fill (blue)
-                        : Colors.white,            // unselected fill
+                        : Colors.white, // unselected fill
                     border: Border.all(
                       color: isSelected
                           ? const Color(0xFF4E6BFA)
@@ -237,11 +265,7 @@ class CusotmSplitPdf extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: isSelected
-                      ? Icon(
-                    Icons.check,
-                    size: 14.sp,
-                    color: Colors.white,
-                  )
+                      ? Icon(Icons.check, size: 14.sp, color: Colors.white)
                       : const SizedBox.shrink(),
                 ),
               ),

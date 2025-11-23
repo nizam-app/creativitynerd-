@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/core/widget/global_image_add_from_gelary.dart';
 import 'package:pdf_scanner/core/widget/upgrade_plan_card.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
@@ -37,7 +38,7 @@ class ToolsScreen extends StatelessWidget {
         cardColor: const Color(0xFFE6F2FF),
         iconBg: const Color(0xFF4C9BFF),
         onTap: () {
-          context.push(MargePdf45.routeName,extra: ScreenName.marge);
+          context.push(MargePdf45.routeName, extra: ScreenName.marge);
         },
       ),
       ToolItem(
@@ -45,21 +46,27 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/splitpdf.svg',
         cardColor: const Color(0xFFE7F7E9),
         iconBg: const Color(0xFF52B46E),
-        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.split);},
+        onTap: () {
+          context.push(MargePdf45.routeName, extra: ScreenName.split);
+        },
       ),
       ToolItem(
         title: 'Image to PDF',
         svgAsset: 'assets/images/image_pdf.svg',
         cardColor: const Color(0xFFFFEEE5),
         iconBg: const Color(0xFFFA8642),
-        onTap: () {},
+        onTap: () {
+          globalShowAddSheet(context, isCheckInTwoOption: false);
+        },
       ),
       ToolItem(
         title: 'Lock PDF',
         svgAsset: 'assets/images/lock.svg',
         cardColor: const Color(0xFFFFF1DB),
         iconBg: const Color(0xFFF6B348),
-        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.lock);},
+        onTap: () {
+          context.push(MargePdf45.routeName, extra: ScreenName.lock);
+        },
       ),
       ToolItem(
         title: 'Unlock PDF',
@@ -67,7 +74,9 @@ class ToolsScreen extends StatelessWidget {
         cardColor: const Color(0xFFE7ECF6),
         iconBg: const Color(0xFF6173AA),
         isPremium: true,
-        onTap: () {context.push(MargePdf45.routeName,extra: ScreenName.unlock);},
+        onTap: () {
+          context.push(MargePdf45.routeName, extra: ScreenName.unlock);
+        },
       ),
       ToolItem(
         title: 'Extract Text',
@@ -131,7 +140,7 @@ class ToolsScreen extends StatelessWidget {
                 ),
               ),
 
-              const UpgradePlanCard(),
+              UpgradePlanCard(),
 
               SizedBox(height: 20.h),
               SizedBox(height: 24.h),
