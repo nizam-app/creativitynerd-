@@ -13,7 +13,7 @@ class GlobalDealsBanner extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: [Color(0xFFE4FFD7), Color(0xFFEAF1FF)],
+          colors: [Color(0xFFD7FFD7), Color(0xFFB9EAFF)],
         ),
       ),
       child: Padding(

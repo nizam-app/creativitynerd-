@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_control/all_color.dart';
+import '../../../core/constants/color_control/tool_flow_color.dart';
 import '../../../core/widget/CustomAppbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -112,10 +113,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color pageBg = AllColor.gery; // e.g. #F5F7FB এর মতো
-
+    final Color pageBg = AllColor.gery;
+    // final bgColor = selected ? const Color(0xFFEAEFFD) : Colors.white;
     return Scaffold(
-      backgroundColor: pageBg,
+     // backgroundColor: pageBg,
+
+      backgroundColor:  ToolFlowColor.backGroundColor,
       appBar: CustomAppBar(
         title: "Choose language",
         centerTitle: true,
@@ -130,15 +133,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
             top: Radius.circular(16.r)
           ),
           child: Container(
-           color: AllColor.white,
+           color:  Color(0xFF000000).withOpacity(0.06),
             child: ListView.separated(
               itemCount: _languages.length,
-              // padding: EdgeInsets.only(top: 16.h, left: 16.h, right: 16.h),
+               //padding: EdgeInsets.only(top: 16.h, left: 16.h, right: 16.h),
               separatorBuilder: (_, __) =>
                   Padding(
                 padding:  EdgeInsets.only(left: 65.h),
                 child:  Divider(
-
                   height: 0,
                   thickness: 0.5,
                   color: AllColor.gery,

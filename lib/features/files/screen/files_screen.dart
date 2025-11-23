@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/widget/global_deals_banner.dart';
+import '../../../core/constants/color_control/tool_flow_color.dart';
 import '../../onbording/widget/CustomButton.dart';
 import '../widget/personal_document.dart';
 
@@ -105,9 +106,11 @@ class _FilesScreenState extends State<FilesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bg = const Color(0xFFF6F8FC);
+    //final bg = const Color(0xFFF6F8FC);
+
     return Scaffold(
-      backgroundColor: bg,
+    //  backgroundColor: bg,
+      backgroundColor: ToolFlowColor.backGroundColor,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -127,7 +130,7 @@ class _FilesScreenState extends State<FilesScreen> {
                   ),
                   SizedBox(width: 10.w),
                   _TinySquareButton.icon(
-                    icon: CupertinoIcons.search,
+                    icon: CupertinoIcons.search,color: AllColor.primary,
                     onTap: () {},
                   ),
                 ],
@@ -180,11 +183,11 @@ class _FilesScreenState extends State<FilesScreen> {
       context: context,
       showDragHandle: true,
       useSafeArea: true,
-      backgroundColor: AllColor.gery, // light grey like screenshot
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
-      ),
-      clipBehavior: Clip.antiAlias,
+      backgroundColor: ToolFlowColor.backGroundColor,// light grey like screenshot
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
+      // ),
+     // clipBehavior: Clip.antiAlias,
       builder: (_) {
         return SingleChildScrollView(
           child: Padding(
@@ -196,8 +199,7 @@ class _FilesScreenState extends State<FilesScreen> {
                 Card(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AllColor.white,
-                      borderRadius: BorderRadius.circular(16.r),
+                      color: ToolFlowColor.backGroundColor,
                     ),
                     padding: EdgeInsets.all(12.r),
                     child: Row(
@@ -398,7 +400,7 @@ class _FilesScreenState extends State<FilesScreen> {
     final created = await showDialog<String>(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _CreateFolderDialog(controller: controller),
+      builder: (_) => CreateFolderDialog(controller: controller),
     );
     if (created != null && created.trim().isNotEmpty) {
       setState(() {
@@ -506,7 +508,7 @@ class _SegmentedTabs extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           decoration: BoxDecoration(
-            color: active ? const Color(0xFFEFF3FF) : Colors.transparent,
+            color: active ? AllColor.white : Colors.transparent,
             borderRadius: BorderRadius.circular(10.r),
           ),
           alignment: Alignment.center,
@@ -553,7 +555,8 @@ class _FilesList extends StatelessWidget {
       itemBuilder: (_, i) {
         final f = files[i];
         return Material(
-          color: Colors.white,
+          color: AllColor.white,
+          //color: ToolFlowColor.backGroundColor,
           borderRadius: BorderRadius.circular(14.r),
           child: InkWell(
             borderRadius: BorderRadius.circular(14.r),
@@ -580,7 +583,7 @@ class _FilesList extends StatelessWidget {
                       color: AllColor.white,
                       borderRadius: BorderRadius.circular(4.r),
                       border: Border.all(
-                        width: 2.w,
+                        width: 1.w,
                         color: AllColor.gery,
                       ),
                     ),
@@ -780,126 +783,138 @@ class _Empty extends StatelessWidget {
 
 /// ───────────────── Create Folder Dialog ─────────────────
 
-class _CreateFolderDialog extends StatelessWidget {
-  const _CreateFolderDialog({required this.controller});
+class CreateFolderDialog extends StatelessWidget {
+  const CreateFolderDialog({super.key, required this.controller});
   final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Center(
-        child: Text(
-          'Create new folder',
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w600,
-            fontFamily: "sf_Pro",
-            color: AllColor.black,
-          ),
-        ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Enter the folder name below',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: AllColor.black.withOpacity(0.6),  // Slight opacity for the subtitle
-              fontFamily: "sf_Pro",
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          TextField(
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AllColor.black,
-              fontFamily: "sf_Pro",
-              fontWeight: FontWeight.w400,
-            ),
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              hintText: 'Enter Name',
-              hintStyle: TextStyle(
-                fontSize: 16.sp,
-                color: AllColor.black.withOpacity(0.6),
-              ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(color: AllColor.gery100.withOpacity(0.10), width: 1.w),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.r),
-                borderSide: BorderSide(color: AllColor.gery100.withOpacity(0.10), width: 1.w),
-              ),
-            ),
-          ),
-
-            // Add vertical space before divider
-            Divider(
-              color: AllColor.gery,  // Color of the divider
-              thickness: 1.w,  // Set thickness of the divider
-              indent: 10.w,  // Indentation on the left side
-              endIndent: 10.w,  // Indentation on the right side
-
-          ),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 28.w),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22.r),
+        child: Container(
+          color: const Color(0xFFF2F2F2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Cancel Button
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    color: AllColor.primary,
-                    fontFamily: "sf_Pro",
-                    fontWeight: FontWeight.w400,
-                  ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 14.h),
+                child: Column(
+                  children: [
+                    Text(
+                      'Create new folder',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "sf_Pro",
+                        color: AllColor.black,
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      'Enter the folder name below',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "sf_Pro",
+                        color: AllColor.black.withOpacity(0.65),
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+
+                    // TextField (only demo/hint, no extra border)
+                    Container(
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE5E5EA),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      alignment: Alignment.center,
+                      child: TextField(
+                        controller: controller,
+                        autofocus: true,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AllColor.black,
+                          fontFamily: "sf_Pro",
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          isCollapsed: true,
+                          border: InputBorder.none,   // ✅ remove all borders
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: 'Enter Name',     // ✅ only demo text
+                          hintStyle: TextStyle(
+                            fontSize: 16.sp,
+                            color: AllColor.black.withOpacity(0.45),
+                            fontFamily: "sf_Pro",
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
-              Container(
-                height: 70.h,
-                width: 1.w,
-                color: AllColor.gery,
-              ),
+              Container(height: 1.h, color: const Color(0xFFBDBDBD)),
 
-              // Create Button
-              TextButton(
-                onPressed: () => Navigator.pop(context, controller.text),
-                child: Text(
-                  'Create',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    color: AllColor.primary,
-                    fontFamily: "sf_Pro",
-                    fontWeight: FontWeight.w600,
-                  ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          height: 54.h,
+                          alignment: Alignment.center,
+                          color: const Color(0xFFF2F2F2),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "sf_Pro",
+                              color: AllColor.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(width: 1.w, color: const Color(0xFFBDBDBD)),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () =>
+                            Navigator.pop(context, controller.text.trim()),
+                        child: Container(
+                          height: 54.h,
+                          alignment: Alignment.center,
+                          color: const Color(0xFFF2F2F2),
+                          child: Text(
+                            'Create',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sf_Pro",
+                              color: AllColor.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
-          )
-
-        ],
-
+          ),
+        ),
       ),
-
-
-
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),  // Rounded corners for the dialog
-      ),
-      backgroundColor: Colors.white,  // Set the background to white
     );
   }
 }
@@ -984,21 +999,29 @@ Future<DeleteDialogResult?> showDeleteAlert(BuildContext context) async {
               ),
               const SizedBox(height: 10),
               Row(
+               mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CupertinoCheckbox(
-                    value: neverAsk,
-                    onChanged: (v) =>
-                        setState(() => neverAsk = v ?? false),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Never ask me again',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "sf_Pro",
-                        color: AllColor.black,
+                  SizedBox(
+                    width: 34.w,
+                    height: 34.w,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: CupertinoCheckbox(
+                        value: neverAsk,
+                        onChanged: (v) =>
+                            setState(() => neverAsk = v ?? false),
                       ),
+                    ),
+                  ),
+                  SizedBox(width: 5.w),
+                  Text(
+                    'Never ask me again',
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "sf_Pro",
+                      color: AllColor.black,
                     ),
                   ),
                 ],

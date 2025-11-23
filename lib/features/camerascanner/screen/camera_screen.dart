@@ -5,8 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/core/widget/CustomAppbar.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/onbording/widget/CustomButton.dart';
 
@@ -86,7 +88,7 @@ class _CameraScreenState extends State<CameraScreen> {
   static const String _idA4BothSidesImage = 'assets/images/both_site.png';
   static const String _idFrontCardImage = 'assets/images/id_card.png';
 
-  // ID-photo example assets (replace with your real ones)
+  // ID-photo example assets
   static const String _idPhotoBadExample = 'assets/images/id_photo.png';
   static const String _idPhotoGoodExample = 'assets/images/id_photo.png';
 
@@ -96,96 +98,11 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  // // =================== ID PHOTO top icon tap ===================
-  // void _onIdScanTap() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     backgroundColor: Colors.white,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-  //     ),
-  //     builder: (ctx) {
-  //       return SafeArea(
-  //         child: Padding(
-  //           padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 18.h),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               // drag handle
-  //               Container(
-  //                 width: 40.w,
-  //                 height: 4.h,
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.black12,
-  //                   borderRadius: BorderRadius.circular(20.r),
-  //                 ),
-  //               ),
-  //               SizedBox(height: 12.h),
-  //
-  //               Text(
-  //                 "ID Photo Settings",
-  //                 style: TextStyle(
-  //                   fontFamily: "sf_Pro",
-  //                   fontSize: 16.sp,
-  //                   fontWeight: FontWeight.w600,
-  //                   color: AllColor.black,
-  //                 ),
-  //               ),
-  //               SizedBox(height: 12.h),
-  //
-  //               _IdPhotoSettingTile(
-  //                 icon: Icons.photo_size_select_large_outlined,
-  //                 title: "Adjust size (25x35mm)",
-  //                 onTap: () => Navigator.pop(ctx),
-  //               ),
-  //               _IdPhotoSettingTile(
-  //                 icon: Icons.image_outlined,
-  //                 title: "Change background",
-  //                 onTap: () => Navigator.pop(ctx),
-  //               ),
-  //               _IdPhotoSettingTile(
-  //                 icon: Icons.checkroom_outlined,
-  //                 title: "Switch outfit",
-  //                 onTap: () => Navigator.pop(ctx),
-  //               ),
-  //               _IdPhotoSettingTile(
-  //                 icon: Icons.auto_fix_high_outlined,
-  //                 title: "Enhance photo",
-  //                 onTap: () => Navigator.pop(ctx),
-  //               ),
-  //
-  //               SizedBox(height: 14.h),
-  //
-  //               SizedBox(
-  //                 height: 48.h,
-  //                 width: double.infinity,
-  //                 child: CustomButton(
-  //                   text: "Continue",
-  //                   textColor: AllColor.white,
-  //                   fontSize: 16.sp,
-  //                   fontWeight: FontWeight.w600,
-  //                   backgroundColor: AllColor.primary,
-  //                   onPressed: () {
-  //                     Navigator.pop(ctx);
-  //                     setState(() {
-  //                       _idPhotoStep = 1; // go to camera frame
-  //                     });
-  //                   },
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   void _showResolutionPopup(BuildContext context) {
     showMenu(
       color: AllColor.gery100.withOpacity(0.60),
       context: context,
-      position: const RelativeRect.fromLTRB(90, 130, 20, 80),
+      position: const RelativeRect.fromLTRB(90, 100, 20, 80),
       elevation: 8.0,
       items: [
         _buildResolutionItem('12M (3968x2976)', true),
@@ -239,7 +156,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void _showCustomPopupMenu(BuildContext context) {
     showMenu(
       context: context,
-      position: const RelativeRect.fromLTRB(90, 130, 20, 80),
+      position: const RelativeRect.fromLTRB(90, 100, 20, 80),
       color: AllColor.gery100.withOpacity(0.60),
       elevation: 8.0,
       items: [
@@ -275,25 +192,44 @@ class _CameraScreenState extends State<CameraScreen> {
 
     return Scaffold(
       backgroundColor: AllColor.black,
+      
+      
+     // appBar: CustomEditAppBar(title: "title", textColor: Colors.white,),
       body: SafeArea(
         child: Column(
           children: [
-            // ========= TOP BAR (FINAL) =========
-            Padding(
-              padding: EdgeInsets.only(left: 6.w, right: 6.w),
+            // ========= TOP BAR (MATCH SCREENSHOT MARGIN) =========
+            Container(
+              //height: 56.h,
+              padding: EdgeInsets.only(
+                left: 6.w,
+                right: 6.w,
+                top: 6.h,
+                bottom: 4.h,
+              ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close,
-                        color: AllColor.white, size: 22.sp),
+                    icon: Icon(
+                      Icons.close,
+                      color: AllColor.white,
+                      size: 22.sp,
+                    ),
                   ),
                   const Spacer(),
 
-                  // ✅ ONLY ONE ICON HERE:
-                  // ID-PHOTO => id_scan.svg
-                  // others => crop.svg
+                  // ID-PHOTO => photo_scan.svg, others => crop.svg
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
                     onPressed: () {
                       if (isIdPhotoMode) {
                         context.push(PhotoScan.routeName);
@@ -313,7 +249,13 @@ class _CameraScreenState extends State<CameraScreen> {
                     ),
                   ),
 
+                  SizedBox(width: 6.w),
+
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
                     onPressed: () => _showResolutionPopup(context),
                     iconSize: 24.sp,
                     icon: SvgPicture.asset(
@@ -324,7 +266,14 @@ class _CameraScreenState extends State<CameraScreen> {
                           Colors.white, BlendMode.srcIn),
                     ),
                   ),
+
+                  SizedBox(width: 6.w),
+
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
                     onPressed: () => _showCustomPopupMenu(context),
                     iconSize: 24.sp,
                     icon: SvgPicture.asset(
@@ -344,11 +293,11 @@ class _CameraScreenState extends State<CameraScreen> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: 10.h),
                 child: Stack(
-                  alignment: Alignment.center,
+                  alignment: Alignment.topCenter,
                   children: [
                     ClipRRect(
                       child: AspectRatio(
-                        aspectRatio: 3 / 4,
+                        aspectRatio: 3 / 4.6,
                         child: Opacity(
                           opacity: _selectedMode == _modeIdCard ? 0.5 : 1.0,
                           child: Image.asset(
@@ -358,12 +307,10 @@ class _CameraScreenState extends State<CameraScreen> {
                         ),
                       ),
                     ),
-
                     if (_selectedMode == _modeQr) const _QrScannerOverlay(),
-
                     if (_selectedMode == _modeDocument)
                       Positioned(
-                        bottom: 64.h,
+                        bottom: 60.h,
                         child: Container(
                           decoration: BoxDecoration(
                             color: AllColor.gery100,
@@ -862,7 +809,7 @@ class _IdA4Panel extends StatelessWidget {
           children: [
             const Spacer(),
             Image.asset(
-              bothSides ? bothSideImage : oneSideImage,
+              bothSides ? oneSideImage :bothSideImage,
               fit: BoxFit.contain,
             ),
           ],
@@ -1100,7 +1047,7 @@ class _IdPhotoExamplePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 300.w,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1128,7 +1075,6 @@ class _IdPhotoExamplePanel extends StatelessWidget {
               ),
             ),
             SizedBox(height: 14.h),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1145,7 +1091,6 @@ class _IdPhotoExamplePanel extends StatelessWidget {
                 ),
               ],
             ),
-
             SizedBox(height: 10.h),
           ],
         ),
@@ -1181,7 +1126,6 @@ class _ExampleThumb extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
           if (showSizeLabel)
             Positioned(
               top: 2.h,
@@ -1196,7 +1140,6 @@ class _ExampleThumb extends StatelessWidget {
                 ),
               ),
             ),
-
           Positioned(
             bottom: 6.h,
             right: 6.w,
@@ -1244,7 +1187,7 @@ class _IdPhotoCameraOverlay extends StatelessWidget {
   }
 }
 
-// ============ ID PHOTO bottom sheet tile ============
+// ============ ID PHOTO bottom sheet tile (optional) ============
 
 class _IdPhotoSettingTile extends StatelessWidget {
   final IconData icon;
@@ -1275,3 +1218,5 @@ class _IdPhotoSettingTile extends StatelessWidget {
     );
   }
 }
+
+
