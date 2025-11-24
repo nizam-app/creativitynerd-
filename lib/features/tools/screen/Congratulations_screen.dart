@@ -26,7 +26,6 @@ class CongratulationsScreen extends StatelessWidget {
             // Top bar
             CustomTopBarBackButton(title: '', icon: Icons.home_outlined),
 
-            // ---------- Scrollable content ----------
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: 16.h),
