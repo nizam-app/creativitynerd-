@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
-import 'package:pdf_scanner/core/widget/CustomAppbar.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
-import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/onbording/widget/CustomButton.dart';
+import 'package:pdf_scanner/features/tools/screen/auto_crop_screen.dart';
 
 import '../widget/customBarcodeDialog.dart';
 
@@ -121,8 +119,10 @@ class _CameraScreenState extends State<CameraScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.check,
-                  color: checked ? AllColor.white : Colors.transparent),
+              Icon(
+                Icons.check,
+                color: checked ? AllColor.white : Colors.transparent,
+              ),
               SizedBox(width: 8.w),
               Text(label),
             ],
@@ -164,17 +164,29 @@ class _CameraScreenState extends State<CameraScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset('assets/images/charge.svg',
-                  width: 24.w, height: 24.w),
+              SvgPicture.asset(
+                'assets/images/charge.svg',
+                width: 24.w,
+                height: 24.w,
+              ),
               SizedBox(width: 20.w),
-              SvgPicture.asset('assets/images/charge_x.svg',
-                  width: 24.w, height: 24.w),
+              SvgPicture.asset(
+                'assets/images/charge_x.svg',
+                width: 24.w,
+                height: 24.w,
+              ),
               SizedBox(width: 20.w),
-              SvgPicture.asset('assets/images/charge_a.svg',
-                  width: 24.w, height: 24.w),
+              SvgPicture.asset(
+                'assets/images/charge_a.svg',
+                width: 24.w,
+                height: 24.w,
+              ),
               SizedBox(width: 20.w),
-              SvgPicture.asset('assets/images/charge_light.svg',
-                  width: 24.w, height: 24.w),
+              SvgPicture.asset(
+                'assets/images/charge_light.svg',
+                width: 24.w,
+                height: 24.w,
+              ),
             ],
           ),
         ),
@@ -185,16 +197,15 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     final bool showCameraBottom =
-    !((_selectedMode == _modeIdCard && _idStep < 2) ||
-        (_selectedMode == _modeIdPhoto && _idPhotoStep == 0));
+        !((_selectedMode == _modeIdCard && _idStep < 2) ||
+            (_selectedMode == _modeIdPhoto && _idPhotoStep == 0));
 
     final bool isIdPhotoMode = _selectedMode == _modeIdPhoto;
 
     return Scaffold(
       backgroundColor: AllColor.black,
-      
-      
-     // appBar: CustomEditAppBar(title: "title", textColor: Colors.white,),
+
+      // appBar: CustomEditAppBar(title: "title", textColor: Colors.white,),
       body: SafeArea(
         child: Column(
           children: [
@@ -213,14 +224,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints:
-                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(
-                      Icons.close,
-                      color: AllColor.white,
-                      size: 22.sp,
+                    constraints: BoxConstraints(
+                      minWidth: 40.w,
+                      minHeight: 40.w,
                     ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: Icon(Icons.close, color: AllColor.white, size: 22.sp),
                   ),
                   const Spacer(),
 
@@ -228,8 +237,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints:
-                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
+                    constraints: BoxConstraints(
+                      minWidth: 40.w,
+                      minHeight: 40.w,
+                    ),
                     onPressed: () {
                       if (isIdPhotoMode) {
                         context.push(PhotoScan.routeName);
@@ -245,7 +256,9 @@ class _CameraScreenState extends State<CameraScreen> {
                       width: 24.w,
                       height: 24.w,
                       colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcIn),
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
 
@@ -254,8 +267,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints:
-                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
+                    constraints: BoxConstraints(
+                      minWidth: 40.w,
+                      minHeight: 40.w,
+                    ),
                     onPressed: () => _showResolutionPopup(context),
                     iconSize: 24.sp,
                     icon: SvgPicture.asset(
@@ -263,7 +278,9 @@ class _CameraScreenState extends State<CameraScreen> {
                       width: 24.w,
                       height: 24.w,
                       colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcIn),
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
 
@@ -272,8 +289,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints:
-                    BoxConstraints(minWidth: 40.w, minHeight: 40.w),
+                    constraints: BoxConstraints(
+                      minWidth: 40.w,
+                      minHeight: 40.w,
+                    ),
                     onPressed: () => _showCustomPopupMenu(context),
                     iconSize: 24.sp,
                     icon: SvgPicture.asset(
@@ -281,7 +300,9 @@ class _CameraScreenState extends State<CameraScreen> {
                       width: 24.w,
                       height: 24.w,
                       colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcIn),
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ],
@@ -416,7 +437,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: List.generate(
                           _modes.length,
-                              (index) => _ModeTab(
+                          (index) => _ModeTab(
                             label: _modes[index],
                             selected: _selectedMode == index,
                             onTap: () => _onModeTap(index),
@@ -458,7 +479,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           setState(() => _bookSplitLine = true);
                           return;
                         }
-                        // TODO capture
+                        context.push(AutoCropScreen.routeName);
                       },
                       child: Container(
                         width: 76.w,
@@ -484,7 +505,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       imagePath: _backgroundImage,
                       count: _selectedMode == _modeDocument ? _pageCount : 1,
                       isMultiPage:
-                      _selectedMode == _modeDocument && _isMultiPage,
+                          _selectedMode == _modeDocument && _isMultiPage,
                     ),
                   ],
                 ),
@@ -528,10 +549,10 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Widget _buildPageModeChip(
-      String text, {
-        required bool selected,
-        required VoidCallback onTap,
-      }) {
+    String text, {
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8.r),
@@ -666,10 +687,7 @@ class _QrScannerOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _QrOverlayPainter(),
-      size: Size.infinite,
-    );
+    return CustomPaint(painter: _QrOverlayPainter(), size: Size.infinite);
   }
 }
 
@@ -694,10 +712,7 @@ class _QrOverlayPainter extends CustomPainter {
       ..addRRect(rrect)
       ..fillType = PathFillType.evenOdd;
 
-    canvas.drawPath(
-      holePath,
-      Paint()..color = Colors.black.withOpacity(0.55),
-    );
+    canvas.drawPath(holePath, Paint()..color = Colors.black.withOpacity(0.55));
 
     final borderPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -717,10 +732,7 @@ class _QrBarcodeToggle extends StatelessWidget {
   final bool qrSelected;
   final ValueChanged<bool> onChanged;
 
-  const _QrBarcodeToggle({
-    required this.qrSelected,
-    required this.onChanged,
-  });
+  const _QrBarcodeToggle({required this.qrSelected, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -809,7 +821,7 @@ class _IdA4Panel extends StatelessWidget {
           children: [
             const Spacer(),
             Image.asset(
-              bothSides ? oneSideImage :bothSideImage,
+              bothSides ? oneSideImage : bothSideImage,
               fit: BoxFit.contain,
             ),
           ],
@@ -823,10 +835,7 @@ class _IdCameraOverlay extends StatelessWidget {
   final bool bothSides;
   final String cardImage;
 
-  const _IdCameraOverlay({
-    required this.bothSides,
-    required this.cardImage,
-  });
+  const _IdCameraOverlay({required this.bothSides, required this.cardImage});
 
   @override
   Widget build(BuildContext context) {
@@ -858,11 +867,7 @@ class _IdCameraOverlay extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14.r),
-              child: Image.asset(
-                cardImage,
-                height: 190.h,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset(cardImage, height: 190.h, fit: BoxFit.cover),
             ),
           ),
         ),
@@ -876,10 +881,7 @@ class _SideToggle extends StatelessWidget {
   final bool bothSides;
   final ValueChanged<bool> onChanged;
 
-  const _SideToggle({
-    required this.bothSides,
-    required this.onChanged,
-  });
+  const _SideToggle({required this.bothSides, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -986,25 +988,49 @@ class _BookOverlayPainter extends CustomPainter {
 
     const double cornerLen = 26;
 
-    canvas.drawLine(bookRect.topLeft,
-        bookRect.topLeft + const Offset(cornerLen, 0), cornerPaint);
-    canvas.drawLine(bookRect.topLeft,
-        bookRect.topLeft + const Offset(0, cornerLen), cornerPaint);
+    canvas.drawLine(
+      bookRect.topLeft,
+      bookRect.topLeft + const Offset(cornerLen, 0),
+      cornerPaint,
+    );
+    canvas.drawLine(
+      bookRect.topLeft,
+      bookRect.topLeft + const Offset(0, cornerLen),
+      cornerPaint,
+    );
 
-    canvas.drawLine(bookRect.topRight,
-        bookRect.topRight + const Offset(-cornerLen, 0), cornerPaint);
-    canvas.drawLine(bookRect.topRight,
-        bookRect.topRight + const Offset(0, cornerLen), cornerPaint);
+    canvas.drawLine(
+      bookRect.topRight,
+      bookRect.topRight + const Offset(-cornerLen, 0),
+      cornerPaint,
+    );
+    canvas.drawLine(
+      bookRect.topRight,
+      bookRect.topRight + const Offset(0, cornerLen),
+      cornerPaint,
+    );
 
-    canvas.drawLine(bookRect.bottomLeft,
-        bookRect.bottomLeft + const Offset(cornerLen, 0), cornerPaint);
-    canvas.drawLine(bookRect.bottomLeft,
-        bookRect.bottomLeft + const Offset(0, -cornerLen), cornerPaint);
+    canvas.drawLine(
+      bookRect.bottomLeft,
+      bookRect.bottomLeft + const Offset(cornerLen, 0),
+      cornerPaint,
+    );
+    canvas.drawLine(
+      bookRect.bottomLeft,
+      bookRect.bottomLeft + const Offset(0, -cornerLen),
+      cornerPaint,
+    );
 
-    canvas.drawLine(bookRect.bottomRight,
-        bookRect.bottomRight + const Offset(-cornerLen, 0), cornerPaint);
-    canvas.drawLine(bookRect.bottomRight,
-        bookRect.bottomRight + const Offset(0, -cornerLen), cornerPaint);
+    canvas.drawLine(
+      bookRect.bottomRight,
+      bookRect.bottomRight + const Offset(-cornerLen, 0),
+      cornerPaint,
+    );
+    canvas.drawLine(
+      bookRect.bottomRight,
+      bookRect.bottomRight + const Offset(0, -cornerLen),
+      cornerPaint,
+    );
 
     if (showSplitLine) {
       final Paint dashPaint = Paint()
@@ -1120,11 +1146,7 @@ class _ExampleThumb extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(6.r),
-            child: Image.asset(
-              image,
-              width: 220.w,
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(image, width: 220.w, fit: BoxFit.cover),
           ),
           if (showSizeLabel)
             Positioned(
@@ -1177,10 +1199,7 @@ class _IdPhotoCameraOverlay extends StatelessWidget {
         height: 340.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(
-            color: AllColor.primary,
-            width: 3,
-          ),
+          border: Border.all(color: AllColor.primary, width: 3),
         ),
       ),
     );
@@ -1218,5 +1237,3 @@ class _IdPhotoSettingTile extends StatelessWidget {
     );
   }
 }
-
-

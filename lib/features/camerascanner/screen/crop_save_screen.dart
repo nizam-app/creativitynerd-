@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/widget/CustomAppbar.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.dart';
 import 'package:pdf_scanner/features/onbording/widget/CustomButton.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pdf_scanner/features/tools/singture_add_alart/add_singturer_bottonShit.dart';
 
 class CropSaveScreen extends StatefulWidget {
   const CropSaveScreen({super.key});
@@ -43,9 +44,7 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                 color: AllColor.white,
                 size: 24.sp,
               ),
-              onPressed: () {
-
-              },
+              onPressed: () {},
             ),
           ),
           Padding(
@@ -70,28 +69,28 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
         child: SafeArea(
           child: Column(
             children: [
-                  Center(
-                    child: Container(
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
-                        borderRadius: BorderRadius.circular(18.r),
-                      ),
-                      child: Container(
-                        width: 340.w,
-                        height: 460.h,
-                        // approximate letter page
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.r),
-                          child: Image.asset(
-                            'assets/images/pdfsaveImages.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111111),
+                    borderRadius: BorderRadius.circular(18.r),
+                  ),
+                  child: Container(
+                    width: 340.w,
+                    height: 460.h,
+                    // approximate letter page
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Image.asset(
+                        'assets/images/pdfsaveImages.png',
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-        
+                ),
+              ),
+
               // BOTTOM PANtaiEL
               Container(
                 width: double.infinity,
@@ -113,7 +112,9 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                         children: [
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 12.w, vertical: 3.h),
+                              horizontal: 12.w,
+                              vertical: 3.h,
+                            ),
                             decoration: BoxDecoration(
                               color: AllColor.gery100,
                               borderRadius: BorderRadius.circular(18.r),
@@ -171,61 +172,73 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                           ),
                         ],
                       ),
-        
+
                       SizedBox(height: 16.h),
-        
-                      // Tool buttons row
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _BottomToolButton(
                             svgPath: 'assets/images/retake_icon.svg',
                             label: 'Retake',
+                            onTap: () {},
                           ),
                           _BottomToolButton(
                             svgPath: 'assets/images/signature.svg',
                             label: 'Signature',
+                            onTap: () {
+                              showSignatureBottomSheet(context);
+                            },
                           ),
                           _BottomToolButton(
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',
+                            onTap: () {},
                           ),
                           _BottomToolButton(
                             svgPath: 'assets/images/add_text.svg',
                             label: 'Add text',
+                            onTap: () {},
                           ),
                           _BottomToolButton(
                             svgPath: 'assets/images/highlight.svg',
                             label: 'Highlight',
+                            onTap: () {},
                           ),
                           _BottomToolButton(
                             svgPath: 'assets/images/filter.svg',
                             label: 'Filter',
+                            onTap: () {},
                           ),
                         ],
                       ),
 
-
                       SizedBox(height: 18.h),
-        
+
                       // Bottom buttons
                       Row(
                         children: [
                           Expanded(
-                            child: CustomButton(text: "Cancel",textColor: AllColor.white, backgroundColor: AllColor.gery100, onPressed: (){
-                              context.pop();
-                            }),
+                            child: CustomButton(
+                              text: "Cancel",
+                              textColor: AllColor.white,
+                              backgroundColor: AllColor.gery100,
+                              onPressed: () {
+                                context.pop();
+                              },
+                            ),
                           ),
-                            SizedBox(width: 12.w,),
-                            Expanded(
-                              child: CustomButton(
-                                  text: "Save PDF",textColor: AllColor.white,
-                                  backgroundColor: AllColor.primary,
-                                  onPressed: (){
-                                    context.push(DocumentPreviewScreen.routeName);
-                              }),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: CustomButton(
+                              text: "Save PDF",
+                              textColor: AllColor.white,
+                              backgroundColor: AllColor.primary,
+                              onPressed: () {
+                                context.push(DocumentPreviewScreen.routeName);
+                              },
+                            ),
                           ),
-        
                         ],
                       ),
                     ],
@@ -240,40 +253,43 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
   }
 }
 
-
 class _BottomToolButton extends StatelessWidget {
   final String svgPath;
   final String label;
-
+  final VoidCallback onTap;
 
   const _BottomToolButton({
     required this.svgPath,
     required this.label,
+    required this.onTap,
     // optional size
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SvgPicture.asset(
-          svgPath,
-          color: AllColor.white,
-          height: 24.h,
-          width: 24.w,
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'sf_Pro',
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          SvgPicture.asset(
+            svgPath,
             color: AllColor.white,
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w500,
+            height: 24.h,
+            width: 24.w,
           ),
-        ),
-      ],
+          SizedBox(height: 6.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'sf_Pro',
+              color: AllColor.white,
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

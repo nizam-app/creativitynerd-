@@ -8,92 +8,106 @@ import 'package:pdf_scanner/features/tools/screen/model/shahre_sestion_model.dar
 import 'package:pdf_scanner/features/tools/widget/custom_document_list.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_top_back_button.dart';
 
-// extension ScreenNameLabel on ScreenName {
-//   String get label {
-//     switch (this) {
-//       case ScreenName.marge:
-//         return "merged";
-//       case ScreenName.split:
-//         return "split";
-//       case ScreenName.lock:
-//         return "locked";
-//     }
-//   }
-// }
 class CongratulationsScreen extends StatelessWidget {
   static final routeName = '/congratulationsScreen';
   final ScreenName isCheckScreenName;
+
   const CongratulationsScreen({super.key, required this.isCheckScreenName});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+            // Top bar
             CustomTopBarBackButton(title: '', icon: Icons.home_outlined),
-            ConraculationTap(
-              screenName: isCheckScreenName,
-              image: SvgPicture.asset('assets/images/tool/verify.svg'),
-            ),
-            CustomDocumentList(
-              documents: [
-                DocumentItem(
-                  title: '04 Aug, document 3',
-                  pages: 8,
-                  size: '120 KB',
+
+            // ---------- Scrollable content ----------
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: Column(
+                  children: [
+                    ConraculationTap(
+                      screenName: isCheckScreenName,
+                      image: SvgPicture.asset('assets/images/tool/verify.svg'),
+                    ),
+                    CustomDocumentList(
+                      documents: const [
+                        DocumentItem(
+                          title: '04 Aug, document 3',
+                          pages: 8,
+                          size: '120 KB',
+                        ),
+                      ],
+                      isMyDeviceShow: false,
+                      showArrow: true,
+                      onDocumentTap: (doc) {},
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 10.h,
+                      ),
+                      child: CustomShareOpen(
+                        onShare: () {
+                          // share logic
+                        },
+                        onOpen: () {
+                          // open pdf logic
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    _ShareSestion(
+                      items: [
+                        ShareActionItem(
+                          icon: SvgPicture.asset(
+                            'assets/images/tool/icon_rename.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          label: 'Rename',
+                          onTap: () {},
+                        ),
+                        ShareActionItem(
+                          icon: SvgPicture.asset(
+                            'assets/images/tool/icon_create_new.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          label: 'New Create',
+                          onTap: () {},
+                        ),
+                        ShareActionItem(
+                          icon: SvgPicture.asset(
+                            'assets/images/tool/icon_whatsapp.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          label: 'WhatsApp',
+                          onTap: () {},
+                        ),
+                        ShareActionItem(
+                          icon: SvgPicture.asset(
+                            'assets/images/tool/icon_tools.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          label: 'Tools',
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-              isMyDeviceShow: false,
-              showArrow: true,
-              onDocumentTap: (doc) {},
-            ) ,
-            Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 16.r, vertical: 10.h),
-              child: CustomShareOpen(
-                onShare: () {
-                  // share logic
-                },
-                onOpen: () {
-                  // open pdf logic
-                },
               ),
             ),
-            SizedBox(height: 10.h,)          ,
-            _ShareSestion(
-              items: [
-                ShareActionItem(
-                  icon: SvgPicture.asset('assets/images/tool/icon_rename.svg', width: 28, height: 28),
-                  label: 'Rename',
-                  onTap: () {
-                    // rename logic
-                  },
-                ),
-                ShareActionItem(
-                  icon:SvgPicture.asset('assets/images/tool/icon_create_new.svg', width: 28, height: 28),
-                  label: 'New Create',
-                  onTap: () {
-                    // new create logic
-                  },
-                ),
-                ShareActionItem(
-                  icon:SvgPicture.asset('assets/images/tool/icon_whatsapp.svg', width: 28, height: 28),
-                  label: 'WhatsApp',
-                  onTap: () {
-                    // whatsapp share
-                  },
-                ),
-                ShareActionItem(
-                  icon:SvgPicture.asset('assets/images/tool/icon_tools.svg', width: 28, height: 28),
-                  label: 'Tools',
-                  onTap: () {
-                    // open tools
-                  },
-                ),
-              ],
-            ),
-            Spacer(),
+
+            // ---------- Fixed bottom banner ----------
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 16.r),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
               child: GlobalDealsBanner(),
             ),
           ],
@@ -140,7 +154,7 @@ class ConraculationTap extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20.sp, 
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF1C1C1C),
                   height: 1.2,
@@ -169,11 +183,7 @@ class CustomShareOpen extends StatelessWidget {
   final VoidCallback? onShare;
   final VoidCallback? onOpen;
 
-  const CustomShareOpen({
-    super.key,
-    this.onShare,
-    this.onOpen,
-  });
+  const CustomShareOpen({super.key, this.onShare, this.onOpen});
 
   @override
   Widget build(BuildContext context) {
@@ -234,13 +244,11 @@ class CustomShareOpen extends StatelessWidget {
     );
   }
 }
+
 class _ShareSestion extends StatelessWidget {
   final List<ShareActionItem> items;
 
-  const _ShareSestion({
-    super.key,
-    required this.items,
-  });
+  const _ShareSestion({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -252,11 +260,11 @@ class _ShareSestion extends StatelessWidget {
         children: items
             .map(
               (e) => _ShareActionTile(
-            icon: e.icon,
-            label: e.label,
-            onTap: e.onTap,
-          ),
-        )
+                icon: e.icon,
+                label: e.label,
+                onTap: e.onTap,
+              ),
+            )
             .toList(),
       ),
     );
@@ -268,11 +276,7 @@ class _ShareActionTile extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
 
-  const _ShareActionTile({
-    required this.icon,
-    required this.label,
-    this.onTap,
-  });
+  const _ShareActionTile({required this.icon, required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {

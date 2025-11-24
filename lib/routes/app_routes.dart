@@ -14,6 +14,7 @@ import 'package:pdf_scanner/features/splash/screen/splash_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/Congratulations_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/auto_crop_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
+import 'package:pdf_scanner/features/tools/screen/page_organize_screen_249.dart';
 import 'package:pdf_scanner/features/tools/screen/plan/screen/upgrade_plan_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
@@ -23,7 +24,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = SplashScreen.routeName;
+  static final String initial = ToolsScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -95,8 +96,6 @@ class AppRouter {
         builder: (context, state) => const OrcExtrect(),
       ),
 
-
-
       GoRoute(
         path: CropSaveScreen.routeName,
         name: CropSaveScreen.routeName,
@@ -108,8 +107,6 @@ class AppRouter {
         name: DocumentPreviewScreen.routeName,
         builder: (context, state) => const DocumentPreviewScreen(),
       ),
-
-
 
       GoRoute(
         path: PhotoScan.routeName,
@@ -155,6 +152,11 @@ class AppRouter {
         path: AutoCropScreen.routeName,
         name: AutoCropScreen.routeName,
         builder: (context, state) => AutoCropScreen(),
+      ),
+      GoRoute(
+        path: PageOrganizeScreen.routeName,
+        name: PageOrganizeScreen.routeName,
+        builder: (context, state) => PageOrganizeScreen(),
       ),
     ],
   );
