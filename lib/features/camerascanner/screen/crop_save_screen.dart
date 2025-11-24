@@ -181,7 +181,6 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _BottomToolButton(
-
                             svgPath: 'assets/images/retake_icon.svg',
                             label: 'Retake',
                             onTap: () {},
@@ -196,7 +195,7 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                           ),
                           _BottomToolButton(
                             onTap: () async {
-                               context.push(WatermarkScreen.routeName);
+                              showAddTextBottomSheet(context);
                             },
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',

@@ -25,7 +25,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = ToolsScreen.routeName;
+  static final String initial = SplashScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -95,13 +95,6 @@ class AppRouter {
         path: OrcExtrect.routeName,
         name: OrcExtrect.routeName,
         builder: (context, state) =>  OrcExtrect(),
-      ),
-
-
-      GoRoute(
-        path: WatermarkScreen.routeName,
-        name: WatermarkScreen.routeName,
-        builder: (context, state) => const WatermarkScreen(),
       ),
 
 
