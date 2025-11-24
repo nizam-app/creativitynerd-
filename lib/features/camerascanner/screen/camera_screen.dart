@@ -476,7 +476,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () => context.push(EditFilterScreen.routeName),
+                      onTap: () => context.push(
+                        EditFilterScreen.routeName,
+                        extra: CameraCheck.camera,
+                      ),
                       child: SvgPicture.asset(
                         'assets/images/add_photo.svg',
                         height: 48.h,
