@@ -14,7 +14,7 @@ class CongratulationsScreen extends StatelessWidget {
 
   const CongratulationsScreen({
     super.key,
-    this.isCheckScreenName = ScreenName.check,
+    this.isCheckScreenName = ScreenName.filter,
   });
 
   @override

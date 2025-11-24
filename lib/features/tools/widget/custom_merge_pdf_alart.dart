@@ -18,7 +18,7 @@ extension AlartNameText on ScreenName {
         return 'Set password';
       case ScreenName.reorder:
         return 'Create New folder';
-      case ScreenName.check:
+      case ScreenName.filter:
         return '';
     }
   }

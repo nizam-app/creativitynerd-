@@ -758,7 +758,7 @@ class _ExportBottomSheetState extends State<_ExportBottomSheet> {
                   onPressed: () {
                     context.push(
                       CongratulationsScreen.routeName,
-                      extra: ScreenName.check,
+                      extra: ScreenName.filter,
                     );
                   },
                   child: Text(

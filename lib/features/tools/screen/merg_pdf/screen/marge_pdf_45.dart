@@ -12,7 +12,7 @@ import 'package:pdf_scanner/features/tools/widget/custom_document_list.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_merge_pdf_alart.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_top_back_button.dart';
 
-enum ScreenName { marge, split, lock, unlock, reorder, check }
+enum ScreenName { marge, split, lock, unlock, reorder, filter }
 
 extension ScreenNameText on ScreenName {
   String get title {
@@ -27,7 +27,7 @@ extension ScreenNameText on ScreenName {
         return 'Unlock PDF';
       case ScreenName.reorder:
         return 'Reorder pages';
-      case ScreenName.check:
+      case ScreenName.filter:
         return '';
     }
   }
