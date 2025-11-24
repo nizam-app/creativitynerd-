@@ -8,6 +8,8 @@ import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.
 import 'package:pdf_scanner/features/onbording/widget/CustomButton.dart';
 import 'package:pdf_scanner/features/tools/singture_add_alart/add_singturer_bottonShit.dart';
 
+import '../widget/watermark.dart';
+
 class CropSaveScreen extends StatefulWidget {
   const CropSaveScreen({super.key});
 
@@ -179,11 +181,13 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _BottomToolButton(
+                            onTap: (){},
                             svgPath: 'assets/images/retake_icon.svg',
                             label: 'Retake',
                             onTap: () {},
                           ),
                           _BottomToolButton(
+                            onTap: (){},
                             svgPath: 'assets/images/signature.svg',
                             label: 'Signature',
                             onTap: () {
@@ -191,21 +195,30 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                             },
                           ),
                           _BottomToolButton(
+                            onTap: () async {
+                              final text = await context.push<String>(WatermarkScreen.routeName);
+                              if (text != null && text.isNotEmpty) {
+                                debugPrint("Watermark Text: $text");
+                              }
+                            },
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',
                             onTap: () {},
                           ),
                           _BottomToolButton(
+                            onTap: (){},
                             svgPath: 'assets/images/add_text.svg',
                             label: 'Add text',
                             onTap: () {},
                           ),
                           _BottomToolButton(
+                            onTap: (){},
                             svgPath: 'assets/images/highlight.svg',
                             label: 'Highlight',
                             onTap: () {},
                           ),
                           _BottomToolButton(
+                            onTap: (){},
                             svgPath: 'assets/images/filter.svg',
                             label: 'Filter',
                             onTap: () {},
@@ -256,12 +269,18 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
 class _BottomToolButton extends StatelessWidget {
   final String svgPath;
   final String label;
+
+  final VoidCallback? onTap;
+
+
   final VoidCallback onTap;
+
 
   const _BottomToolButton({
     required this.svgPath,
     required this.label,
     required this.onTap,
+
     // optional size
     Key? key,
   }) : super(key: key);

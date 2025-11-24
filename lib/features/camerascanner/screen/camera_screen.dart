@@ -96,6 +96,15 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
+  void _onBackgroundTap() {
+    if (_selectedMode == _modeOcr) {
+      // যেটা তোমার project এ আছে সেটা use করো:
+      context.push(OrcExtrect.routeName);
+
+      // context.push('/ocrScan');
+    }
+  }
+
   void _showResolutionPopup(BuildContext context) {
     showMenu(
       color: AllColor.gery100.withOpacity(0.60),
@@ -134,6 +143,10 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _onModeTap(int index) {
+    if (index == _modeOcr) {
+      context.push(OrcExtrect.routeName);
+      return;
+    }
     setState(() {
       _selectedMode = index;
 
@@ -205,7 +218,8 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       backgroundColor: AllColor.black,
 
-      // appBar: CustomEditAppBar(title: "title", textColor: Colors.white,),
+
+
       body: SafeArea(
         child: Column(
           children: [
@@ -318,7 +332,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   children: [
                     ClipRRect(
                       child: AspectRatio(
-                        aspectRatio: 3 / 4.6,
+                        aspectRatio: 3 / 4.4,
                         child: Opacity(
                           opacity: _selectedMode == _modeIdCard ? 0.5 : 1.0,
                           child: Image.asset(
@@ -797,7 +811,6 @@ class _SmallToggleChip extends StatelessWidget {
     );
   }
 }
-
 // ================== ID card widgets ==================
 
 class _IdA4Panel extends StatelessWidget {
@@ -816,7 +829,7 @@ class _IdA4Panel extends StatelessWidget {
     return Center(
       child: Container(
         width: 290.w,
-        height: 380.h,
+
         child: Column(
           children: [
             const Spacer(),

@@ -6,6 +6,7 @@ import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
+import 'package:pdf_scanner/features/camerascanner/widget/watermark.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
@@ -93,8 +94,16 @@ class AppRouter {
       GoRoute(
         path: OrcExtrect.routeName,
         name: OrcExtrect.routeName,
-        builder: (context, state) => const OrcExtrect(),
+        builder: (context, state) =>  OrcExtrect(),
       ),
+
+
+      GoRoute(
+        path: WatermarkScreen.routeName,
+        name: WatermarkScreen.routeName,
+        builder: (context, state) => const WatermarkScreen(),
+      ),
+
 
       GoRoute(
         path: CropSaveScreen.routeName,

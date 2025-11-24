@@ -40,7 +40,7 @@ class BottomNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final idx = ref.watch(selectedIndex);
 
-    final double fabSize = 64.r;
+    final double fabSize = 60.r;
     final double fabMargin = 8.w;
 
     return Scaffold(
