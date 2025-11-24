@@ -12,7 +12,7 @@ import 'package:pdf_scanner/features/tools/widget/custom_document_list.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_merge_pdf_alart.dart';
 import 'package:pdf_scanner/features/tools/widget/custom_top_back_button.dart';
 
-enum ScreenName { marge, split, lock, unlock, reorder }
+enum ScreenName { marge, split, lock, unlock, reorder, filter }
 
 extension ScreenNameText on ScreenName {
   String get title {
@@ -27,6 +27,8 @@ extension ScreenNameText on ScreenName {
         return 'Unlock PDF';
       case ScreenName.reorder:
         return 'Reorder pages';
+      case ScreenName.filter:
+        return '';
     }
   }
 }
@@ -262,12 +264,12 @@ class CusotmSplitPdf extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: isSelected
                           ? const Color(0xFF4E6BFA) // selected fill (blue)
-                          : Colors.white, // unselected fill
+                          : Colors.black.withOpacity(0.30), // unselected fill
                       border: Border.all(
                         color: isSelected
                             ? const Color(0xFF4E6BFA)
-                            : const Color(0xFFD1D7E3),
-                        width: 2.w,
+                            : AllColor.white,
+                        width: 3.w,
                       ),
                     ),
                     alignment: Alignment.center,

@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:go_router/go_router.dart";
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/features/tools/screen/Congratulations_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/data/ducment_selecd_data.dart';
+import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
 class PageOrganizeScreen extends ConsumerStatefulWidget {
   const PageOrganizeScreen({super.key});
@@ -753,7 +756,10 @@ class _ExportBottomSheetState extends State<_ExportBottomSheet> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.push(
+                      CongratulationsScreen.routeName,
+                      extra: ScreenName.filter,
+                    );
                   },
                   child: Text(
                     'Save',

@@ -25,7 +25,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = ToolsScreen.routeName;
+  static final String initial = SplashScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -83,7 +83,8 @@ class AppRouter {
       GoRoute(
         path: EditFilterScreen.routeName,
         name: EditFilterScreen.routeName,
-        builder: (context, state) => const EditFilterScreen(),
+        builder: (context, state) =>
+            EditFilterScreen(checkCamera: state.extra as CameraCheck),
       ),
       GoRoute(
         path: CropScreen.routeName,
@@ -94,16 +95,14 @@ class AppRouter {
       GoRoute(
         path: OrcExtrect.routeName,
         name: OrcExtrect.routeName,
-        builder: (context, state) =>  OrcExtrect(),
+        builder: (context, state) => OrcExtrect(),
       ),
-
 
       GoRoute(
         path: WatermarkScreen.routeName,
         name: WatermarkScreen.routeName,
         builder: (context, state) => const WatermarkScreen(),
       ),
-
 
       GoRoute(
         path: CropSaveScreen.routeName,
@@ -160,7 +159,8 @@ class AppRouter {
       GoRoute(
         path: AutoCropScreen.routeName,
         name: AutoCropScreen.routeName,
-        builder: (context, state) => AutoCropScreen(),
+        builder: (context, state) =>
+            AutoCropScreen(cameraCheck: state.extra as CameraCheck),
       ),
       GoRoute(
         path: PageOrganizeScreen.routeName,

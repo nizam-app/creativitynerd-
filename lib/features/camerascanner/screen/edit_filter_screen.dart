@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/features/tools/screen/auto_crop_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
+import 'package:pdf_scanner/features/tools/screen/page_organize_screen_249.dart';
 
 import '../../../core/widget/CustomAppbar.dart';
 
@@ -72,8 +74,8 @@ class _FilteredImage extends StatelessWidget {
 }
 
 class EditFilterScreen extends StatefulWidget {
-  const EditFilterScreen({super.key});
-
+  const EditFilterScreen({super.key, this.checkCamera = CameraCheck.camera});
+  final CameraCheck checkCamera;
   static const String routeName = '/editFilter';
 
   @override
@@ -107,7 +109,10 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              context.push(MargePdf45.routeName, extra: ScreenName.reorder);
+              if (widget.checkCamera == CameraCheck.camera)
+                context.push(PageOrganizeScreen.routeName);
+              else
+                context.push(MargePdf45.routeName, extra: ScreenName.reorder);
             },
             child: Text(
               "Done",
