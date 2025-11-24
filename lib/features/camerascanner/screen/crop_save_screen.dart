@@ -192,10 +192,7 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                           ),
                           _BottomToolButton(
                             onTap: () async {
-                              final text = await context.push<String>(WatermarkScreen.routeName);
-                              if (text != null && text.isNotEmpty) {
-                                debugPrint("Watermark Text: $text");
-                              }
+                               context.push(WatermarkScreen.routeName);
                             },
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',
