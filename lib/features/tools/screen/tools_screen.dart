@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/widget/global_image_add_from_gelary.dart';
 import 'package:pdf_scanner/core/widget/upgrade_plan_card.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
 class ToolItem {
@@ -90,7 +91,9 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/signature.svg',
         cardColor: const Color(0xFFEDEDED),
         iconBg: const Color(0xFF919191),
-        onTap: () {},
+        onTap: () {
+          context.push(CropSaveScreen.routeName);
+        },
       ),
       ToolItem(
         title: 'QR Scan',

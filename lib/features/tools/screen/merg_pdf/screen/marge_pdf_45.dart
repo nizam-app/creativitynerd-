@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Add this import
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/constants/color_control/tool_flow_color.dart';
@@ -91,7 +90,7 @@ class MargePdf45 extends ConsumerWidget {
                           if (isCheckScreenName == ScreenName.unlock) {
                             final name = await showMergePdfNameDialog(
                               context,
-                              screenName: isCheckScreenName.name,
+                              screenName: isCheckScreenName,
                             );
                             if (name != null && name.isNotEmpty) {
                               context.push(
@@ -138,11 +137,12 @@ class MargePdf45 extends ConsumerWidget {
                           final selected = selectedIndexes.contains(index);
 
                           return CusotmSplitPdf(
-                            thumbnail: SvgPicture.asset(
-                              'assets/images/tool/Rectangle.svg',
+                            thumbnail: Image.asset(
+                              'assets/images/tool/maiye.png',
                               fit: BoxFit.cover,
                             ),
                             isSelected: selected,
+                            screenName: isCheckScreenName,
 
                             onTap: () {
                               ref
@@ -179,7 +179,7 @@ class MargePdf45 extends ConsumerWidget {
             if (!hasSelection) return;
             final name = await showMergePdfNameDialog(
               context,
-              screenName: isCheckScreenName.name,
+              screenName: isCheckScreenName,
             );
             if (name != null && name.isNotEmpty) {
               context.push(
@@ -199,6 +199,7 @@ class CusotmSplitPdf extends StatelessWidget {
   final bool isSelected; // true = blue check, false = empty circle
   final VoidCallback? onTap;
   final double? width;
+  final ScreenName screenName;
 
   const CusotmSplitPdf({
     super.key,
@@ -206,6 +207,7 @@ class CusotmSplitPdf extends StatelessWidget {
     this.isSelected = false,
     this.onTap,
     this.width,
+    this.screenName = ScreenName.split,
   });
 
   @override
@@ -237,41 +239,43 @@ class CusotmSplitPdf extends StatelessWidget {
               Positioned.fill(child: thumbnail),
 
               // bottom overlay (image-এর উপরেই)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: 44.h,
-                  color: Colors.black.withOpacity(0.30),
+              if (screenName != ScreenName.reorder)
+                ?Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    height: 44.h,
+                    color: Colors.black.withOpacity(0.30),
+                  ),
                 ),
-              ),
 
               // selection circle bottom-right
-              Positioned(
-                right: 12.w,
-                bottom: 10.h,
-                child: Container(
-                  width: 24.w,
-                  height: 24.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected
-                        ? const Color(0xFF4E6BFA) // selected fill (blue)
-                        : Colors.white, // unselected fill
-                    border: Border.all(
+              if (screenName != ScreenName.reorder)
+                ?Positioned(
+                  right: 12.w,
+                  bottom: 10.h,
+                  child: Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: isSelected
-                          ? const Color(0xFF4E6BFA)
-                          : const Color(0xFFD1D7E3),
-                      width: 2.w,
+                          ? const Color(0xFF4E6BFA) // selected fill (blue)
+                          : Colors.white, // unselected fill
+                      border: Border.all(
+                        color: isSelected
+                            ? const Color(0xFF4E6BFA)
+                            : const Color(0xFFD1D7E3),
+                        width: 2.w,
+                      ),
                     ),
+                    alignment: Alignment.center,
+                    child: isSelected
+                        ? Icon(Icons.check, size: 14.sp, color: Colors.white)
+                        : const SizedBox.shrink(),
                   ),
-                  alignment: Alignment.center,
-                  child: isSelected
-                      ? Icon(Icons.check, size: 14.sp, color: Colors.white)
-                      : const SizedBox.shrink(),
                 ),
-              ),
             ],
           ),
         ),
