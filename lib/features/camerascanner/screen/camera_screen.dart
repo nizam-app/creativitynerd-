@@ -219,8 +219,6 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       backgroundColor: AllColor.black,
 
-
-
       body: SafeArea(
         child: Column(
           children: [
@@ -494,7 +492,10 @@ class _CameraScreenState extends State<CameraScreen> {
                           setState(() => _bookSplitLine = true);
                           return;
                         }
-                        context.push(AutoCropScreen.routeName);
+                        context.push(
+                          AutoCropScreen.routeName,
+                          extra: CameraCheck.camera,
+                        );
                       },
                       child: Container(
                         width: 76.w,

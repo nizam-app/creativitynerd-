@@ -53,7 +53,10 @@ void globalShowAddSheet(
                   if (isCheckInTwoOption == true)
                     context.push(CameraScreen.routeName);
                   else
-                    context.push(AutoCropScreen.routeName);
+                    context.push(
+                      AutoCropScreen.routeName,
+                      extra: CameraCheck.nonCamera,
+                    );
                 },
               ),
             ),
