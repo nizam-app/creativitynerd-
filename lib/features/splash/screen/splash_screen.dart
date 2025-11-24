@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -96,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
                     return SimpleProgressBar(
                       progress: _animation.value, // 0.0 .. 1.0
                       height: 6.h,
-                      horizontalInset: 50.w,
+                      horizontalInset: 10.w,
                     );
                   },
                 ),
@@ -111,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
 }
 
 class SimpleProgressBar extends StatelessWidget {
-  final double progress;
+  final double progress; // 0.0 .. 1.0 (controller value)
   final double height;
   final double horizontalInset;
   final Color trackColor;
@@ -121,7 +120,7 @@ class SimpleProgressBar extends StatelessWidget {
     super.key,
     required this.progress,
     this.height = 4,
-    this.horizontalInset = 30,
+    this.horizontalInset = 10,
     this.trackColor = AllColor.white,
     this.fillColor = AllColor.primary,
   });
@@ -131,64 +130,61 @@ class SimpleProgressBar extends StatelessWidget {
     // controller value clamp (0.0 .. 1.0)
     final double t = progress.clamp(0.0, 1.0).toDouble();
 
-    // মোট ১টা টাইমলাইনকে দুই ভাগে ভাগ করলাম
-    const double forwardPart = 0.6; // 60% সময় forward (left → right)
-    const double backPart = 1.0 - forwardPart; // 40% সময় back (right → center)
+    // ----- left↔right multiple times -----
+    // kotobar full cycle (left→right→left) hobe
+    const int cycles = 3; // chaile 4 o dite paro
 
-    double p; // 0 = left, 1 = right, 0.5 = center
+    final double total = t * cycles; // 0..cycles
+    final int segment = total.floor(); // 0,1,2,...
+    final double tCycle = total - segment; // 0..1 (current cycle position)
+    final bool forward = segment.isEven; // even: left→right, odd: right→left
 
-    if (t <= forwardPart) {
-      // প্রথম ৬০% : একদম বাম থেকে একদম ডানে যাবে
-      final double phase = t / forwardPart; // 0..1
-      p = phase; // 0..1
-    } else {
-      // পরের ৪০% : ডান থেকে center এ ফিরে আসবে
-      final double phase = (t - forwardPart) / backPart; // 0..1
-      p = 1.0 - 0.5 * phase; // 1.0 → 0.5
-    }
+    // p: 0 = left, 1 = right
+    final double p = forward ? tCycle : (1.0 - tCycle);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final double trackW = constraints.maxWidth;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double trackW = constraints.maxWidth;
 
-        final double innerW = (trackW - horizontalInset * 2).clamp(
-          0.0,
-          double.infinity,
-        );
+          // puro width use korbo
+          final double innerW = trackW;
 
-        // segment total width er 60%
-        const double segmentFraction = 0.60;
-        final double segmentW = innerW * segmentFraction;
+          // segment total width er 60%
+          const double segmentFraction = 0.60;
+          final double segmentW = innerW * segmentFraction;
 
-        // সর্বোচ্চ offset (একদম ডান প্রান্ত)
-        final double maxOffset = innerW - segmentW;
-        final double offset = maxOffset * p;
+          // সর্বোচ্চ offset (একদম ডান প্রান্ত)
+          final double maxOffset = innerW - segmentW;
+          final double offset = maxOffset * p;
 
-        return Container(
-          height: height,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: trackColor,
-            borderRadius: BorderRadius.circular(height),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                left: offset,
-                top: 0,
-                bottom: 0,
-                child: Container(
-                  width: segmentW,
-                  decoration: BoxDecoration(
-                    color: fillColor,
-                    borderRadius: BorderRadius.circular(height),
+          return Container(
+            height: height,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: trackColor,
+              borderRadius: BorderRadius.circular(height),
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  left: offset,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: segmentW,
+                    decoration: BoxDecoration(
+                      color: fillColor,
+                      borderRadius: BorderRadius.circular(height),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

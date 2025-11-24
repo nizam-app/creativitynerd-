@@ -5,9 +5,26 @@ import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/tool_flow_color.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 
+extension AlartNameText on ScreenName {
+  String get alartName {
+    switch (this) {
+      case ScreenName.marge:
+        return 'Marge PDF';
+      case ScreenName.split:
+        return 'Split PDF';
+      case ScreenName.lock:
+        return 'Set password';
+      case ScreenName.unlock:
+        return 'Set password';
+      case ScreenName.reorder:
+        return 'Create New folder';
+    }
+  }
+}
+
 Future<String?> showMergePdfNameDialog(
   BuildContext context, {
-  required String screenName, // 'merge' / 'lock'
+  required ScreenName screenName, // 'merge' / 'lock'
   String? fileName, // lock হলে উপরের ছোট টেক্সট
 }) async {
   final controller = TextEditingController();
@@ -28,7 +45,7 @@ Future<String?> showMergePdfNameDialog(
 
 class _MergePdfNameAlert extends StatefulWidget {
   final TextEditingController controller;
-  final String screenName; // 'merge' / 'lock'
+  final ScreenName screenName; // 'merge' / 'lock'
   final String? fileName;
 
   const _MergePdfNameAlert({
@@ -47,8 +64,8 @@ class _MergePdfNameAlertState extends State<_MergePdfNameAlert> {
   @override
   Widget build(BuildContext context) {
     final bool isLock =
-        widget.screenName.toLowerCase() == 'lock' ||
-        widget.screenName.toLowerCase() == "unlock";
+        widget.screenName == ScreenName.lock ||
+        widget.screenName == ScreenName.unlock;
 
     return Center(
       child: Material(
@@ -71,7 +88,7 @@ class _MergePdfNameAlertState extends State<_MergePdfNameAlert> {
                   children: [
                     Center(
                       child: Text(
-                        isLock ? 'Set Password' : ScreenName.values.toString(),
+                        widget.screenName.alartName,
                         style: TextStyle(
                           fontSize: 17.sp,
                           fontWeight: FontWeight.w600,
@@ -179,7 +196,11 @@ class _MergePdfNameAlertState extends State<_MergePdfNameAlert> {
                           ).pop(widget.controller.text.trim());
                         },
                         child: Text(
-                          isLock ? 'Unlock PDF' : 'Ok',
+                          isLock
+                              ? 'Unlock PDF'
+                              : widget.screenName == ScreenName.reorder
+                              ? 'Converted'
+                              : 'Ok',
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
