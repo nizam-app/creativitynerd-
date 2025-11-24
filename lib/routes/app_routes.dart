@@ -97,6 +97,11 @@ class AppRouter {
         builder: (context, state) =>  OrcExtrect(),
       ),
 
+      // GoRoute(
+      //   path: WatermarkScreen.routeName,
+      //   name: WatermarkScreen.routeName,
+      //   builder: (context, state) => const WatermarkScreen(),
+      // ),
 
       GoRoute(
         path: CropSaveScreen.routeName,
@@ -153,7 +158,8 @@ class AppRouter {
       GoRoute(
         path: AutoCropScreen.routeName,
         name: AutoCropScreen.routeName,
-        builder: (context, state) => AutoCropScreen(),
+        builder: (context, state) =>
+            AutoCropScreen(cameraCheck: state.extra as CameraCheck),
       ),
       GoRoute(
         path: PageOrganizeScreen.routeName,

@@ -9,8 +9,11 @@ import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/core/widget/CustomAppbar.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 
+enum CameraCheck { camera, nonCamera }
+
 class AutoCropScreen extends StatelessWidget {
-  const AutoCropScreen({super.key});
+  const AutoCropScreen({super.key, required this.cameraCheck});
+  final CameraCheck cameraCheck;
   static const routeName = '/autoCropScreen';
 
   @override
@@ -28,7 +31,7 @@ class AutoCropScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              context.push(EditFilterScreen.routeName);
+              context.push(EditFilterScreen.routeName, extra: cameraCheck);
             },
             child: Text(
               "Done",

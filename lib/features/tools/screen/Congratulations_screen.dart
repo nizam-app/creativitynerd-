@@ -12,7 +12,10 @@ class CongratulationsScreen extends StatelessWidget {
   static final routeName = '/congratulationsScreen';
   final ScreenName isCheckScreenName;
 
-  const CongratulationsScreen({super.key, required this.isCheckScreenName});
+  const CongratulationsScreen({
+    super.key,
+    this.isCheckScreenName = ScreenName.filter,
+  });
 
   @override
   Widget build(BuildContext context) {

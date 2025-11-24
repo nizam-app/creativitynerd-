@@ -155,7 +155,6 @@ class _AddTextBottomSheetState extends State<_AddTextBottomSheet> {
                         ),
                       ),
                       SizedBox(width: 8.w),
-
                       // Font family dropdown
                       _SegmentBox(
                         child: Row(
@@ -294,14 +293,14 @@ class _SegmentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 34.h,
+      height: 38.h,
       width: width,
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       decoration: BoxDecoration(
         color: AllColor.white,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(
-          color: const Color(0xFFE2E3E7),
+          color: AllColor.white,
           width: 1,
         ),
         boxShadow: [

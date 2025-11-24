@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,19 +17,35 @@ void showSignatureBottomSheet(BuildContext context) {
   );
 }
 
-class _SignatureBottomSheet extends StatelessWidget {
+/// ───────────────── BottomSheet ─────────────────
+class _SignatureBottomSheet extends StatefulWidget {
   const _SignatureBottomSheet({super.key});
+
+  @override
+  State<_SignatureBottomSheet> createState() => _SignatureBottomSheetState();
+}
+
+class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
+  /// এখানে dynamic ভাবে signature path রাখবে
+  /// শুরুতে খালি থাকলে নিচের white box একদমই দেখাবে না
+  final List<String> _signatures = [];
+
+  Future<void> _onMenuAction(SignatureMenuAction? action) async {
+    if (action == null) return;
+
+    // TODO: এখানে আসল camera / gallery / draw logic বসাবে
+    // নিচেরটা শুধু ডেমোর জন্য – action পেলেই dummy ছবি add করছি
+    setState(() {
+      _signatures.add('assets/images/signature_1.png');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
 
     return Padding(
-      padding: EdgeInsets.only(
-        left: 0,
-        right: 0,
-        bottom: media.padding.bottom, // bottom gesture area
-      ),
+      padding: EdgeInsets.only(left: 0, right: 0, bottom: media.padding.bottom),
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
@@ -41,6 +58,7 @@ class _SignatureBottomSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /// ───────── header (Cancel | Signature) ─────────
               Row(
                 children: [
                   GestureDetector(
@@ -66,19 +84,19 @@ class _SignatureBottomSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 60.w), // Cancel এর জায়গা balance করার জন্য
+                  SizedBox(width: 60.w),
                 ],
               ),
 
               SizedBox(height: 14.h),
 
-              // ───────── Add Signature box (dashed) ─────────
+              /// ───────── Add Signature box (dashed) + plus menu ─────────
               DottedBorder(
                 borderType: BorderType.RRect,
                 radius: Radius.circular(14.r),
-                color: const Color(0xFFCBD2E7), // light grey dashed
+                color: const Color(0xFFCBD2E7),
                 strokeWidth: 1,
-                dashPattern: const [6, 4], // dash length 6, gap 4
+                dashPattern: const [6, 4],
                 child: Container(
                   height: 64.h,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -97,7 +115,64 @@ class _SignatureBottomSheet extends StatelessWidget {
                           color: const Color(0xFF1C1C1E),
                         ),
                       ),
-                      const Icon(Icons.add, size: 22, color: Color(0xFF1C1C1E)),
+
+                      /// ➕ আইকনে ক্লিক করলে উপরে submenu popup হবে
+                      Builder(
+                        builder: (btnCtx) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTapDown: (details) async {
+                              final overlay =
+                                  Overlay.of(btnCtx).context.findRenderObject()
+                                      as RenderBox;
+
+                              // menu টা একটু উপরে দেখানোর জন্য rect বানাচ্ছি
+                              final position = RelativeRect.fromLTRB(
+                                details.globalPosition.dx,
+                                details.globalPosition.dy - 180, // উপরে শিফট
+                                overlay.size.width - details.globalPosition.dx,
+                                overlay.size.height -
+                                    (details.globalPosition.dy - 180),
+                              );
+
+                              final selected =
+                                  await showMenu<SignatureMenuAction>(
+                                    context: btnCtx,
+                                    position: position,
+                                    color: Colors.white,
+                                    elevation: 12,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.r),
+                                    ),
+                                    items: [
+                                      _buildMenuItem(
+                                        icon: CupertinoIcons.camera,
+                                        text: 'Camera',
+                                        value: SignatureMenuAction.camera,
+                                      ),
+                                      _buildMenuItem(
+                                        icon: CupertinoIcons.photo_on_rectangle,
+                                        text: 'Import from gallery',
+                                        value: SignatureMenuAction.gallery,
+                                      ),
+                                      _buildMenuItem(
+                                        icon: CupertinoIcons.pencil,
+                                        text: 'Draw',
+                                        value: SignatureMenuAction.draw,
+                                      ),
+                                    ],
+                                  );
+
+                              await _onMenuAction(selected);
+                            },
+                            child: Icon(
+                              CupertinoIcons.add,
+                              size: 22.sp,
+                              color: const Color(0xFF1C1C1E),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -105,26 +180,28 @@ class _SignatureBottomSheet extends StatelessWidget {
 
               SizedBox(height: 16.h),
 
-              // ───────── Saved signatures list ─────────
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18.r),
+              /// ───────── Saved signatures list (only if _signatures not empty) ─────────
+              if (_signatures.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18.r),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (int i = 0; i < _signatures.length; i++) ...[
+                        _SignaturePreviewItem(imagePath: _signatures[i]),
+                        if (i != _signatures.length - 1) SizedBox(height: 12.h),
+                      ],
+                    ],
+                  ),
                 ),
-                child: Column(
-                  children: const [
-                    _SignaturePreviewItem(
-                      imagePath: 'assets/images/signature_1.png',
-                    ),
-                    SizedBox(height: 12),
-                    _SignaturePreviewItem(
-                      imagePath: 'assets/images/signature_2.png',
-                    ),
-                  ],
-                ),
-              ),
 
               SizedBox(height: 12.h),
             ],
@@ -135,9 +212,8 @@ class _SignatureBottomSheet extends StatelessWidget {
   }
 }
 
-/// popup menu item
-PopupMenuItem<SignatureMenuAction> _buildMenuItem(
-  BuildContext context, {
+/// ───────── Popup-menu items (camera / gallery / draw) ─────────
+PopupMenuItem<SignatureMenuAction> _buildMenuItem({
   required IconData icon,
   required String text,
   required SignatureMenuAction value,
@@ -162,7 +238,7 @@ PopupMenuItem<SignatureMenuAction> _buildMenuItem(
   );
 }
 
-/// single saved-signature row (white card)
+/// ───────── single saved-signature row (white card) ─────────
 class _SignaturePreviewItem extends StatelessWidget {
   final String imagePath;
 
