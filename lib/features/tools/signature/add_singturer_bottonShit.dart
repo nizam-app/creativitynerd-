@@ -2,6 +2,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pdf_scanner/features/tools/signature/signature_draw_screen.dart';
 
 const Color _kPrimaryBlue = Color(0xFF657DF2);
 
@@ -34,7 +36,7 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
     if (action == null) return;
 
     // TODO: এখানে আসল camera / gallery / draw logic বসাবে
-    // নিচেরটা শুধু ডেমোর জন্য – action পেলেই dummy ছবি add করছি
+
     setState(() {
       _signatures.add('assets/images/signature_1.png');
     });
@@ -53,7 +55,7 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
           decoration: BoxDecoration(
             color: const Color(0xFFF4F7FF),
-            borderRadius: BorderRadius.circular(24.r),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -66,7 +68,7 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 17.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFF8E8E93),
                       ),
@@ -77,9 +79,9 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
                       child: Text(
                         'Signature',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF262626),
+                          color: const Color(0xFF616263),
                         ),
                       ),
                     ),
@@ -94,7 +96,7 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
               DottedBorder(
                 borderType: BorderType.RRect,
                 radius: Radius.circular(14.r),
-                color: const Color(0xFFCBD2E7),
+                color: Colors.black.withOpacity(.22),
                 strokeWidth: 1,
                 dashPattern: const [6, 4],
                 child: Container(
@@ -110,7 +112,7 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
                       Text(
                         'Add Signature',
                         style: TextStyle(
-                          fontSize: 15.sp,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF1C1C1E),
                         ),
@@ -149,16 +151,23 @@ class _SignatureBottomSheetState extends State<_SignatureBottomSheet> {
                                         icon: CupertinoIcons.camera,
                                         text: 'Camera',
                                         value: SignatureMenuAction.camera,
+                                        onTap: () {},
                                       ),
                                       _buildMenuItem(
                                         icon: CupertinoIcons.photo_on_rectangle,
                                         text: 'Import from gallery',
                                         value: SignatureMenuAction.gallery,
+                                        onTap: () {},
                                       ),
                                       _buildMenuItem(
                                         icon: CupertinoIcons.pencil,
                                         text: 'Draw',
                                         value: SignatureMenuAction.draw,
+                                        onTap: () {
+                                          context.push(
+                                            NewSignatureScreen.routeName,
+                                          );
+                                        },
                                       ),
                                     ],
                                   );
@@ -217,23 +226,27 @@ PopupMenuItem<SignatureMenuAction> _buildMenuItem({
   required IconData icon,
   required String text,
   required SignatureMenuAction value,
+  required VoidCallback onTap,
 }) {
   return PopupMenuItem<SignatureMenuAction>(
     value: value,
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-    child: Row(
-      children: [
-        Icon(icon, size: 18.sp, color: const Color(0xFF111111)),
-        SizedBox(width: 10.w),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF111111),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon, size: 18.sp, color: const Color(0xFF111111)),
+          SizedBox(width: 10.w),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF111111),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
