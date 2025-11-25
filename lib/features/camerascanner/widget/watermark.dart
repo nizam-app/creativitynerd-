@@ -1,102 +1,293 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 
+import '../../../core/constants/color_control/tool_flow_color.dart';
 
-class WatermarkScreen extends StatefulWidget {
-  const WatermarkScreen({super.key});
-  static const routeName = "/watermark";
-
-  @override
-  State<WatermarkScreen> createState() => _WatermarkScreenState();
+Future<String?> showAddTextBottomSheet(BuildContext context) {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const _AddTextBottomSheet(),
+  );
 }
 
-class _WatermarkScreenState extends State<WatermarkScreen> {
-  String watermarkText = "";
+/// ================== BOTTOM SHEET ==================
+
+class _AddTextBottomSheet extends StatefulWidget {
+  const _AddTextBottomSheet({super.key});
+
+  @override
+  State<_AddTextBottomSheet> createState() => _AddTextBottomSheetState();
+}
+
+class _AddTextBottomSheetState extends State<_AddTextBottomSheet> {
+  double _fontSize = 12;
+  final TextEditingController _controller = TextEditingController();
+
+  // alignment state (local to this sheet)
+  bool _isAlignMenuOpen = false;
+  TextAlign _textAlign = TextAlign.left;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _close() => Navigator.pop(context);
+
+  void _submit() {
+    Navigator.pop(context, _controller.text.trim());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-
-      // ---------- DEMO TOOLBAR ----------
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-        title: const Text(
-          "Watermark",
-          style: TextStyle(
-            fontFamily: "sf_Pro",
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: ToolFlowColor.backGroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
           ),
         ),
-        centerTitle: true,
-      ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ---------------- TOP BAR ----------------
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: _close,
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontFamily: 'sf_Pro',
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AllColor.borderColor,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'Add text',
+                      style: TextStyle(
+                        fontFamily: 'sf_Pro',
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AllColor.black,
+                      ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: _submit,
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          fontFamily: 'sf_Pro',
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AllColor.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
-      body: Stack(
-        children: [
-          // demo background image
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/camera_image.png",
-              fit: BoxFit.cover,
-            ),
-          ),
+                SizedBox(height: 14.h),
 
-          // ✅ watermark overlay preview
-          if (watermarkText.isNotEmpty)
-            Center(
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  watermarkText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "sf_Pro",
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                // ---------------- TOP CONTROLS ROW ----------------
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // ALIGN + POPUP
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isAlignMenuOpen = !_isAlignMenuOpen;
+                              });
+                            },
+                            child: _SegmentBox(
+                              isActive: _isAlignMenuOpen,
+                              child: Row(
+                                children: [
+                                  _AlignLinesIcon(
+                                    align: _textAlign,
+                                    color: _isAlignMenuOpen
+                                        ? Colors.white
+                                        : AllColor.black,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Icon(
+                                    _isAlignMenuOpen
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    size: 16.sp,
+                                    color: AllColor.primary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // popup
+                          if (_isAlignMenuOpen)
+                            Positioned(
+                              top: 44.h,
+                              left: 0,
+                              child: _AlignPopup(
+                                selected: _textAlign,
+                                onSelected: (align) {
+                                  setState(() {
+                                    _textAlign = align;
+                                    _isAlignMenuOpen = false;
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      SizedBox(width: 8.w),
+
+                      // Font size with - 12 pt +
+                      _SegmentBox(
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (_fontSize > 8) _fontSize--;
+                                });
+                              },
+                              child: Icon(Icons.remove,
+                                  size: 16.sp, color: AllColor.primary),
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              '${_fontSize.toInt()} pt',
+                              style: TextStyle(
+                                fontFamily: 'sf_Pro',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AllColor.black,
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _fontSize++;
+                                });
+                              },
+                              child: Icon(Icons.add,
+                                  size: 16.sp, color: AllColor.primary),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+
+                      // Font family box
+                      _SegmentBox(
+                        child: Row(
+                          children: [
+                            Text(
+                              'SF Pro',
+                              style: TextStyle(
+                                fontFamily: 'sf_Pro',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AllColor.black,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Icon(Icons.keyboard_arrow_down,
+                                size: 16.sp, color: AllColor.primary),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+
+                      const ColorCircleDropdownIcon(),
+                    ],
                   ),
                 ),
-              ),
+
+                SizedBox(height: 14.h),
+
+                // ---------------- TEXT AREA ----------------
+                Container(
+                  width: double.infinity,
+                  height: 220.h,
+                  decoration: BoxDecoration(
+                    color: AllColor.white,
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: TextField(
+                    controller: _controller,
+                    maxLines: null,
+                    textAlign: _textAlign,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(
+                      fontFamily: 'sf_Pro',
+                      fontSize: _fontSize.sp,
+                      color: AllColor.borderColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    decoration: InputDecoration(
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 10.h,
+                      ),
+                      hintText: 'Type here',
+                      hintStyle: TextStyle(
+                        fontFamily: 'sf_Pro',
+                        fontSize: 17.sp,
+                        color: AllColor.borderColor,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-        ],
-      ),
-
-      // ---------- DEMO BOTTOM TOOLBAR ----------
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BottomToolButton(
-                svgPath: "assets/images/watermark.svg",
-                label: "Watermark",
-                onTap: () async {
-                  final text = await showWatermarkBottomSheet(
-                    context,
-                    initialText: watermarkText,
-                    initialFontSize: 12,
-                  );
-
-                  if (text != null) {
-                    setState(() => watermarkText = text);
-                  }
-                },
-              ),
-              BottomToolButton(
-                svgPath: "assets/images/export_icon.svg",
-                label: "Export",
-                onTap: () {},
-              ),
-            ],
           ),
         ),
       ),
@@ -104,384 +295,598 @@ class _WatermarkScreenState extends State<WatermarkScreen> {
   }
 }
 
-/// ==================================
-/// ✅ Bottom toolbar button (example)
-/// ==================================
-class BottomToolButton extends StatelessWidget {
-  final String svgPath;
-  final String label;
-  final VoidCallback onTap;
+/// ================== COLOR CIRCLE ICON ==================
+
+class ColorCircleDropdownIcon extends StatelessWidget {
+  const ColorCircleDropdownIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 34.w,
+      height: 34.w,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Outer black ring
+          Container(
+            width: 34.w,
+            height: 34.w,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AllColor.black,
+            ),
+          ),
+
+          // White ring
+          Container(
+            width: 28.w,
+            height: 28.w,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AllColor.white,
+            ),
+          ),
+
+          // Inner black filled circle
+          Container(
+            width: 22.w,
+            height: 22.w,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AllColor.black,
+            ),
+          ),
+
+          // Blue V arrow
+          Transform.rotate(
+            angle: math.pi,
+            child: Icon(
+              Icons.expand_less,
+              size: 14.sp,
+              color: AllColor.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// ================== SEGMENT BOX ==================
+
+class _SegmentBox extends StatelessWidget {
+  final Widget child;
+  final double? width;
   final bool isActive;
 
-  const BottomToolButton({
-    super.key,
-    required this.svgPath,
-    required this.label,
-    required this.onTap,
+  const _SegmentBox({
+    required this.child,
+    this.width,
     this.isActive = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? const Color(0xFF0A84FF) : Colors.white;
+    return Container(
+      height: 38.h,
+      width: width,
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      decoration: BoxDecoration(
+        color: isActive ? const Color(0xFFE3E7F9) : AllColor.white,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: Colors.white,
+          width: 1,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.white,
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Center(child: child),
+    );
+  }
+}
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 24.sp,
-              height: 24.sp,
-              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: "sf_Pro",
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w500,
-                color: color,
+/// ================== ALIGN POPUP (4 options) ==================
+
+class _AlignPopup extends StatelessWidget {
+  final TextAlign selected;
+  final ValueChanged<TextAlign> onSelected;
+
+  const _AlignPopup({
+    required this.selected,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.arrow_drop_up,
+          color: AllColor.white,
+          size: 22.sp,
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: AllColor.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _AlignOption(
+                align: TextAlign.left,
+                isSelected: selected == TextAlign.left,
+                onTap: () => onSelected(TextAlign.left),
+              ),
+              SizedBox(width: 8.w),
+              _AlignOption(
+                align: TextAlign.center,
+                isSelected: selected == TextAlign.center,
+                onTap: () => onSelected(TextAlign.center),
+              ),
+              SizedBox(width: 8.w),
+              _AlignOption(
+                align: TextAlign.right,
+                isSelected: selected == TextAlign.right,
+                onTap: () => onSelected(TextAlign.right),
+              ),
+              SizedBox(width: 8.w),
+              _AlignOption(
+                align: TextAlign.justify,
+                isSelected: selected == TextAlign.justify,
+                onTap: () => onSelected(TextAlign.justify),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AlignOption extends StatelessWidget {
+  final TextAlign align;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _AlignOption({
+    required this.align,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 52.w,
+        height: 52.w,
+        decoration: BoxDecoration(
+          color: isSelected ? AllColor.primary : const Color(0xFFF4F5F7),
+          borderRadius: BorderRadius.circular(18.r),
+        ),
+        child: Center(
+          child: _AlignLinesIcon(
+            align: align,
+            color: isSelected ? Colors.white : const Color(0xFF27323A),
+          ),
         ),
       ),
     );
   }
 }
 
-/// ============================
-/// ✅ SHOW BOTTOMSHEET FUNCTION
-/// ============================
-Future<String?> showWatermarkBottomSheet(
-    BuildContext context, {
-      String initialText = "",
-      double initialFontSize = 12,
-    }) async {
-  final controller = TextEditingController(text: initialText);
+/// tiny 3-line icon used for alignment
 
-  final result = await showModalBottomSheet<String>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: Colors.black.withOpacity(0.2),
-    builder: (_) {
-      return Watermark(
-        controller: controller,
-        initialFontSize: initialFontSize,
-        onCancel: () => Navigator.pop(context),
-        onDone: () => Navigator.pop(context, controller.text.trim()),
-      );
-    },
-  );
+class _AlignLinesIcon extends StatelessWidget {
+  final TextAlign align;
+  final Color color;
 
-  controller.dispose();
-  return result;
-}
-
-/// ============================
-/// ✅ WATERMARK BOTTOMSHEET UI
-/// ============================
-class Watermark extends StatefulWidget {
-  const Watermark({
-    super.key,
-    required this.controller,
-    this.onDone,
-    this.onCancel,
-    this.initialFontSize = 12,
+  const _AlignLinesIcon({
+    required this.align,
+    required this.color,
   });
 
-  final TextEditingController controller;
-  final VoidCallback? onDone;
-  final VoidCallback? onCancel;
-  final double initialFontSize;
-
-  @override
-  State<Watermark> createState() => _WatermarkState();
-}
-
-class _WatermarkState extends State<Watermark> {
-  late double _fontSize;
-  String _fontName = "SF Pro";
-  TextAlign _align = TextAlign.left;
-
-  @override
-  void initState() {
-    super.initState();
-    _fontSize = widget.initialFontSize;
+  Alignment _alignment() {
+    switch (align) {
+      case TextAlign.center:
+        return Alignment.center;
+      case TextAlign.right:
+        return Alignment.centerRight;
+      default:
+        return Alignment.centerLeft;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOut,
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFF2F2F7),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
-        ),
-        padding: EdgeInsets.only(
-          left: 12.w,
-          right: 12.w,
-          top: 8.h,
-          bottom: 10.h,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // ===== Top Bar =====
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    widget.onCancel?.call();
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                        fontFamily: "sf_Pro",
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF3C3C43),
-                      ),
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  "Add text",
-                  style: TextStyle(
-                    fontFamily: "sf_Pro",
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    widget.onDone?.call();
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
-                    child: Text(
-                      "Done",
-                      style: TextStyle(
-                        fontFamily: "sf_Pro",
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF0A84FF),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 8.h),
-
-            // ===== Toolbar Row =====
-            Row(
-              children: [
-                _pillButton(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _align == TextAlign.left
-                            ? Icons.format_align_left
-                            : _align == TextAlign.center
-                            ? Icons.format_align_center
-                            : Icons.format_align_right,
-                        size: 18.sp,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 6.w),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 18.sp, color: const Color(0xFF0A84FF)),
-                    ],
-                  ),
-                  onTap: () {
-                    setState(() {
-                      if (_align == TextAlign.left) {
-                        _align = TextAlign.center;
-                      } else if (_align == TextAlign.center) {
-                        _align = TextAlign.right;
-                      } else {
-                        _align = TextAlign.left;
-                      }
-                    });
-                  },
-                ),
-
-                SizedBox(width: 8.w),
-                _pillButton(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _fontSize = (_fontSize - 1).clamp(8, 72);
-                          });
-                        },
-                        child: Icon(Icons.remove,
-                            size: 18.sp, color: const Color(0xFF0A84FF)),
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        "${_fontSize.toInt()} pt",
-                        style: TextStyle(
-                          fontFamily: "sf_Pro",
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _fontSize = (_fontSize + 1).clamp(8, 72);
-                          });
-                        },
-                        child: Icon(Icons.add,
-                            size: 18.sp, color: const Color(0xFF0A84FF)),
-                      ),
-                    ],
-                  ), onTap: () { },
-                ),
-
-                SizedBox(width: 8.w),
-                _pillButton(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        _fontName,
-                        style: TextStyle(
-                          fontFamily: "sf_Pro",
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 18.sp, color: const Color(0xFF0A84FF)),
-                    ],
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _fontName = _fontName == "SF Pro" ? "Poppins" : "SF Pro";
-                    });
-                  },
-                ),
-
-                const Spacer(),
-
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  customBorder: const CircleBorder(),
-                  child: Container(
-                    width: 34.w,
-                    height: 34.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 2),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 18.sp,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 10.h),
-
-            // ===== Text Field Area =====
-            Container(
-              width: double.infinity,
-              height: 170.h,
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(
-                  color: const Color(0xFFE5E5EA),
-                  width: 1,
-                ),
-              ),
-              child: TextField(
-                controller: widget.controller,
-                maxLines: null,
-                textAlign: _align,
-                style: TextStyle(
-                  fontFamily: "sf_Pro",
-                  fontSize: _fontSize.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  border: InputBorder.none,
-                  hintText: "Type here",
-                  hintStyle: TextStyle(
-                    fontFamily: "sf_Pro",
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0x993C3C43), // 60% opacity
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: 8.h),
-          ],
-        ),
+    return SizedBox(
+      width: 26.w,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _line(align == TextAlign.justify ? Alignment.center : _alignment()),
+          SizedBox(height: 3.h),
+          _line(align == TextAlign.justify ? Alignment.center : _alignment()),
+          SizedBox(height: 3.h),
+          _line(align == TextAlign.justify ? Alignment.center : _alignment()),
+        ],
       ),
     );
   }
 
-  Widget _pillButton({
-    required Widget child,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8.r),
+  Widget _line(Alignment alignment) {
+    return Align(
+      alignment: alignment,
       child: Container(
-        height: 36.h,
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        height: 2.h,
+        width: 18.w,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(color: const Color(0xFFE5E5EA), width: 1),
+          color: color,
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        child: Center(child: child),
       ),
     );
   }
 }
+
+
+
+// import 'dart:math' as math;
+//
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+//
+// import '../../../core/constants/color_control/tool_flow_color.dart';
+//
+//
+// Future<String?> showAddTextBottomSheet(BuildContext context) {
+//   return showModalBottomSheet<String>(
+//     context: context,
+//     isScrollControlled: true,
+//     backgroundColor: Colors.transparent,
+//     builder: (_) => const _AddTextBottomSheet(),
+//   );
+// }
+//
+// class _AddTextBottomSheet extends StatefulWidget {
+//   const _AddTextBottomSheet({super.key});
+//
+//   @override
+//   State<_AddTextBottomSheet> createState() => _AddTextBottomSheetState();
+// }
+//
+// class _AddTextBottomSheetState extends State<_AddTextBottomSheet> {
+//   double _fontSize = 12;
+//   final TextEditingController _controller = TextEditingController();
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return Padding(
+//       padding: EdgeInsets.only(
+//         // make sheet go above keyboard
+//         bottom: MediaQuery.of(context).viewInsets.bottom,
+//       ),
+//       child: Container(
+//         decoration: BoxDecoration(
+//           color: ToolFlowColor.backGroundColor,
+//           borderRadius: BorderRadius.only(
+//             topLeft: Radius.circular(20.r),
+//             topRight: Radius.circular(20.r),
+//           ),
+//         ),
+//         child: SafeArea(
+//           top: false,
+//           child: Padding(
+//             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 // ---------------- TOP BAR ----------------
+//                 Row(
+//                   children: [
+//                     GestureDetector(
+//                       onTap: () => Navigator.pop(context),
+//                       child: Text(
+//                         'Cancel',
+//                         style: TextStyle(
+//                           fontFamily: 'sf_Pro',
+//                           fontSize: 17.sp,
+//                           fontWeight: FontWeight.w400,
+//                           color: AllColor.borderColor,
+//                         ),
+//                       ),
+//                     ),
+//                     const Spacer(),
+//                     Text(
+//                       'Add text',
+//                       style: TextStyle(
+//                         fontFamily: 'sf_Pro',
+//                         fontSize: 17.sp,
+//                         fontWeight: FontWeight.w600,
+//                         color: AllColor.black,
+//                       ),
+//                     ),
+//                     const Spacer(),
+//                     GestureDetector(
+//                       onTap: () => Navigator.pop(context, _controller.text),
+//                       child: Text(
+//                         'Done',
+//                         style: TextStyle(
+//                           fontFamily: 'sf_Pro',
+//                           fontSize: 17.sp,
+//                           fontWeight: FontWeight.w600,
+//                           color: AllColor.primary,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//
+//                 SizedBox(height: 14.h),
+//
+//                 // ---------------- TOP CONTROLS ROW ----------------
+//                 SingleChildScrollView(
+//                   scrollDirection: Axis.horizontal,
+//                   child: Row(
+//                     children: [
+//                       // Align dropdown
+//                       _SegmentBox(
+//                         child: Row(
+//                           children: [
+//                             Icon(Icons.format_align_left,
+//                                 size: 20.sp, color: AllColor.black),
+//                             SizedBox(width: 6.w),
+//                             Icon(Icons.keyboard_arrow_down,
+//                                 size: 16.sp, color: AllColor.primary),
+//                           ],
+//                         ),
+//                       ),
+//                       SizedBox(width: 8.w),
+//
+//                       // Font size with - 12 pt +
+//                       _SegmentBox(
+//                         child: Row(
+//                           children: [
+//                             GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   if (_fontSize > 8) _fontSize--;
+//                                 });
+//                               },
+//                               child: Icon(Icons.remove,
+//                                   size: 16.sp, color: AllColor.primary),
+//                             ),
+//                             SizedBox(width: 4.w),
+//                             Text(
+//                               '${_fontSize.toInt()} pt',
+//                               style: TextStyle(
+//                                 fontFamily: 'sf_Pro',
+//                                 fontSize: 17.sp,
+//                                 fontWeight: FontWeight.w500,
+//                                 color: AllColor.black,
+//                               ),
+//                             ),
+//                             SizedBox(width: 4.w),
+//                             GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   _fontSize++;
+//                                 });
+//                               },
+//                               child: Icon(Icons.add,
+//                                   size: 16.sp, color: AllColor.primary),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       SizedBox(width: 8.w),
+//                       // Font family dropdown
+//                       _SegmentBox(
+//                         child: Row(
+//                           children: [
+//                             Text(
+//                               'SF Pro',
+//                               style: TextStyle(
+//                                 fontFamily: 'sf_Pro',
+//                                 fontSize: 17.sp,
+//                                 fontWeight: FontWeight.w500,
+//                                 color: AllColor.black,
+//                               ),
+//                             ),
+//                             SizedBox(width: 6.w),
+//                             Icon(Icons.keyboard_arrow_down,
+//                                 size: 16.sp, color: AllColor.primary),
+//                           ],
+//                         ),
+//                       ),
+//                       SizedBox(width: 8.w),
+//                       ColorCircleDropdownIcon(),
+//                     ],
+//                   ),
+//                 ),
+//
+//                 SizedBox(height: 14.h),
+//
+//                 // ---------------- TEXT AREA ----------------
+//                 Container(
+//                   width: double.infinity,
+//                   height: 220.h,
+//                   decoration: BoxDecoration(
+//                     color: AllColor.white,            // outer background
+//                     borderRadius: BorderRadius.circular(16.r),
+//                   ),
+//                   child: TextField(
+//                     controller: _controller,
+//                     maxLines: null,
+//                     keyboardType: TextInputType.multiline,
+//                     style: TextStyle(
+//                       fontFamily: 'sf_Pro',
+//                       fontSize: 17.sp,
+//                       color: AllColor.borderColor,    // typing text color
+//                       fontWeight: FontWeight.w400,
+//                     ),
+//                     decoration: InputDecoration(
+//                       isCollapsed: true,
+//                       contentPadding: EdgeInsets.symmetric(
+//                         horizontal: 12.w,
+//                         vertical: 10.h,
+//                       ),
+//                       hintText: 'Type here',
+//                       hintStyle: TextStyle(
+//                         fontFamily: 'sf_Pro',
+//                         fontSize: 17.sp,
+//                         color: AllColor.borderColor,  // hint text color
+//                       ),
+//
+//                       // ---- সব border pure white রাখা হলো ----
+//                       border: OutlineInputBorder(
+//                         borderRadius: BorderRadius.circular(16.r),
+//                         borderSide: const BorderSide(
+//                           color: AllColor.white,
+//                           width: 1,
+//                         ),
+//                       ),
+//                       enabledBorder: OutlineInputBorder(
+//                         borderRadius: BorderRadius.circular(16.r),
+//                         borderSide: const BorderSide(
+//                           color: Colors.white,
+//                           width: 1,
+//                         ),
+//                       ),
+//                       focusedBorder: OutlineInputBorder(
+//                         borderRadius: BorderRadius.circular(16.r),
+//                         borderSide: const BorderSide(
+//                           color: Colors.white,
+//                           width: 1,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// class ColorCircleDropdownIcon extends StatelessWidget {
+//   const ColorCircleDropdownIcon({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: 34.w,
+//       height: 34.w,
+//       child: Stack(
+//         alignment: Alignment.center,
+//         children: [
+//           // Outer black ring
+//           Container(
+//             width: 34.w,
+//             height: 34.w,
+//             decoration: const BoxDecoration(
+//               shape: BoxShape.circle,
+//               color: AllColor.black,
+//             ),
+//           ),
+//
+//           // White ring
+//           Container(
+//             width: 28.w,
+//             height: 28.w,
+//             decoration:  BoxDecoration(
+//               shape: BoxShape.circle,
+//               color: AllColor.white,
+//             ),
+//           ),
+//
+//           // Inner black filled circle
+//           Container(
+//             width: 22.w,
+//             height: 22.w,
+//             decoration:  BoxDecoration(
+//               shape: BoxShape.circle,
+//               color: AllColor.black,
+//             ),
+//           ),
+//
+//           // Blue V arrow
+//           Transform.rotate(
+//             angle: math.pi,
+//             child: Icon(
+//               Icons.expand_less,
+//               size: 14.sp,
+//               color:  AllColor.primary,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+//
+// /// Small rounded white segment like the screenshot controls row
+// class _SegmentBox extends StatelessWidget {
+//   final Widget child;
+//   final double? width;
+//
+//   const _SegmentBox({
+//     required this.child,
+//     this.width,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 38.h,
+//       width: width,
+//       padding: EdgeInsets.symmetric(horizontal: 10.w),
+//       decoration: BoxDecoration(
+//         color: AllColor.white,
+//         borderRadius: BorderRadius.circular(10.r),
+//         border: Border.all(
+//           color: AllColor.white,
+//           width: 1,
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.white,
+//             blurRadius: 4,
+//             offset:  Offset(0, 1),
+//           ),
+//         ],
+//       ),
+//       child: Center(child: child),
+//     );
+//   }
+// }

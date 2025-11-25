@@ -202,7 +202,11 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                           ),
                           _BottomToolButton(
                             onTap: () async {
-                              context.push(WatermarkScreen.routeName);
+
+                
+
+                              showAddTextBottomSheet(context);
+
                             },
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',

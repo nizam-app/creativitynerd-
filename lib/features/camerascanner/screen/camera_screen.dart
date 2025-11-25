@@ -110,7 +110,7 @@ class _CameraScreenState extends State<CameraScreen> {
     showMenu(
       color: AllColor.gery100.withOpacity(0.60),
       context: context,
-      position: const RelativeRect.fromLTRB(90, 100, 20, 80),
+      position: const RelativeRect.fromLTRB(100, 80, 20, 60),
       elevation: 8.0,
       items: [
         _buildResolutionItem('12M (3968x2976)', true),
@@ -170,7 +170,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void _showCustomPopupMenu(BuildContext context) {
     showMenu(
       context: context,
-      position: const RelativeRect.fromLTRB(90, 100, 20, 80),
+      position: const RelativeRect.fromLTRB(100, 80, 20, 60),
       color: AllColor.gery100.withOpacity(0.60),
       elevation: 8.0,
       items: [
@@ -331,7 +331,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   children: [
                     ClipRRect(
                       child: AspectRatio(
-                        aspectRatio: 3 / 4.4,
+                        aspectRatio: 3 / 4.55,
                         child: Opacity(
                           opacity: _selectedMode == _modeIdCard ? 0.5 : 1.0,
                           child: Image.asset(
@@ -344,11 +344,11 @@ class _CameraScreenState extends State<CameraScreen> {
                     if (_selectedMode == _modeQr) const _QrScannerOverlay(),
                     if (_selectedMode == _modeDocument)
                       Positioned(
-                        bottom: 60.h,
+                        bottom: 55.h,
                         child: Container(
                           decoration: BoxDecoration(
                             color: AllColor.gery100,
-                            borderRadius: BorderRadius.circular(16.r),
+                            borderRadius: BorderRadius.circular(100.r),
                           ),
                           child: Row(
                             children: [
@@ -574,12 +574,12 @@ class _CameraScreenState extends State<CameraScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: selected ? AllColor.primary : AllColor.gery100,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(100.r),
         ),
         child: Text(
           text,

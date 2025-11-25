@@ -87,8 +87,7 @@ class AppRouter {
       GoRoute(
         path: EditFilterScreen.routeName,
         name: EditFilterScreen.routeName,
-        builder: (context, state) =>
-            EditFilterScreen(checkCamera: state.extra as CameraCheck),
+        builder: (context, state) => const EditFilterScreen(),
       ),
       GoRoute(
         path: CropScreen.routeName,
@@ -99,14 +98,14 @@ class AppRouter {
       GoRoute(
         path: OrcExtrect.routeName,
         name: OrcExtrect.routeName,
-        builder: (context, state) => OrcExtrect(),
+        builder: (context, state) =>  OrcExtrect(),
       ),
 
-      GoRoute(
-        path: WatermarkScreen.routeName,
-        name: WatermarkScreen.routeName,
-        builder: (context, state) => const WatermarkScreen(),
-      ),
+      // GoRoute(
+      //   path: WatermarkScreen.routeName,
+      //   name: WatermarkScreen.routeName,
+      //   builder: (context, state) => const WatermarkScreen(),
+      // ),
 
       GoRoute(
         path: CropSaveScreen.routeName,

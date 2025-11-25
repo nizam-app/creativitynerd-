@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
-
 import '../../onbording/screens/onboardingScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -48,17 +47,18 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: ToolFlowColor.backGroundColor ,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
                 Container(
                   height: 208.h,
-                  width: 208.w,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100.r),
@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(height: 10.h),
+               // SizedBox(height: 10.h),
                 Text(
                   "PDF Scanner",
                   style: TextStyle(
@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const Spacer(),
+                 const Spacer(),
 
                 AnimatedBuilder(
                   animation: _animation,
@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
                     );
                   },
                 ),
-                SizedBox(height: 20.h),
+                 SizedBox(height: 20.h),
               ],
             ),
           ),

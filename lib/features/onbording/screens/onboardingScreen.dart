@@ -26,7 +26,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       svg: 'assets/images/quick.png',
       title: 'Quick scanner in\nyour pocket',
       subtitle:
-      'Scan, sign and share document with text recognition, saving in any format',
+      'Scan, sign and share document with text recognition, save in any format',
     ),
     _Slide(
       svg: 'assets/images/quick1.png',
@@ -38,7 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       svg: 'assets/images/quick2.png',
       title: 'eSign and edit\ndocuments',
       subtitle:
-      'Crop, rotate, change to black and white,\nand many other features',
+      'Crop, rotate, change to black & white,\nand many other features',
     ),
     _Slide(
       svg: 'assets/images/scan.png',
@@ -127,7 +127,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fit: BoxFit.cover,
             ),
           ),
-
           // Content
           SafeArea(
             child: Padding(
@@ -135,7 +134,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 8.h),
-
                   _ProgressSegments(
                     count: _slides.length,
                     activeIndex: _index,
@@ -202,7 +200,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 20.h),
 
                   GlobalCustomButton(
                     title: "Continue",
@@ -300,6 +298,7 @@ class _SlideView extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: AllColor.black,
             fontFamily: "sf_Pro",
+            height: 1.1.h
           ),
         ),
         SizedBox(height: 8.h),
@@ -311,6 +310,7 @@ class _SlideView extends StatelessWidget {
             color: AllColor.black.withOpacity(0.7),
             fontFamily: "sf_Pro",
             fontWeight: FontWeight.w500,
+            height: 1.1.h
           ),
         ),
       ],

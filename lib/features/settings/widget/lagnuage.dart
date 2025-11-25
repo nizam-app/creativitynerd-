@@ -117,12 +117,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     // final bgColor = selected ? const Color(0xFFEAEFFD) : Colors.white;
     return Scaffold(
      // backgroundColor: pageBg,
-
       backgroundColor:  ToolFlowColor.backGroundColor,
       appBar: CustomAppBar(
         title: "Choose language",
         centerTitle: true,
         actionText: 'Done',
+
        // onActionTap: () => Navigator.of(context).pop(_current),
         onBack: () => Navigator.of(context).pop(),
       ),
@@ -155,7 +155,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   onTap: () => setState(() => _current = lang),
                   child: Container(
                     color: selected
-                        ? const Color(0xFFF1F4FF)
+                        ? Colors.red
                         : Colors.white,
                     child: ListTile(
                       contentPadding: EdgeInsets.symmetric(
