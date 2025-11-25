@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/features/add/screen/add_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart';
@@ -18,6 +20,8 @@ import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.d
 import 'package:pdf_scanner/features/tools/screen/page_organize_screen_249.dart';
 import 'package:pdf_scanner/features/tools/screen/plan/screen/upgrade_plan_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
+import 'package:pdf_scanner/features/tools/signature/apply_singturer_screen.dart';
+import 'package:pdf_scanner/features/tools/signature/signature_draw_screen.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
 
 import '../features/camerascanner/screen/camera_screen.dart';
@@ -25,7 +29,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = SplashScreen.routeName;
+  static final String initial = ToolsScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,
@@ -105,8 +109,12 @@ class AppRouter {
 
       GoRoute(
         path: CropSaveScreen.routeName,
-        name: CropSaveScreen.routeName,
-        builder: (context, state) => const CropSaveScreen(),
+        builder: (context, state) {
+          final bytes = state.extra as Uint8List?;
+          return CropSaveScreen(
+            signedDocBytes: bytes, // null hole default asset cholbe
+          );
+        },
       ),
 
       GoRoute(
@@ -165,6 +173,21 @@ class AppRouter {
         path: PageOrganizeScreen.routeName,
         name: PageOrganizeScreen.routeName,
         builder: (context, state) => PageOrganizeScreen(),
+      ),
+      GoRoute(
+        path: NewSignatureScreen.routeName,
+        name: NewSignatureScreen.routeName,
+        builder: (context, state) => NewSignatureScreen(),
+      ),
+      GoRoute(
+        path: ApplySignatureScreen.routeName,
+        builder: (context, state) {
+          final args = state.extra as ApplySignatureArgs;
+          return ApplySignatureScreen(
+            documentImagePath: args.documentImagePath,
+            signatureBytes: args.signatureBytes,
+          );
+        },
       ),
     ],
   );
