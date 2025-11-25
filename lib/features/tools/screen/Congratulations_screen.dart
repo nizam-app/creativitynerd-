@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/widget/global_deals_banner.dart';
+import 'package:pdf_scanner/features/navbar/screen/navbar.dart';
 import 'package:pdf_scanner/features/tools/screen/merg_pdf/screen/marge_pdf_45.dart';
 import 'package:pdf_scanner/features/tools/screen/model/document_list_model.dart';
 import 'package:pdf_scanner/features/tools/screen/model/shahre_sestion_model.dart';
@@ -24,7 +26,13 @@ class CongratulationsScreen extends StatelessWidget {
         child: Column(
           children: [
             // Top bar
-            CustomTopBarBackButton(title: '', icon: Icons.home_outlined),
+            CustomTopBarBackButton(
+              title: '',
+              icon: Icons.home_outlined,
+              onSearchTap: () {
+                context.push(BottomNavBar.routeName);
+              },
+            ),
 
             Expanded(
               child: SingleChildScrollView(
