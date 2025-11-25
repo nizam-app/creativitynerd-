@@ -29,7 +29,7 @@ import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
 class AppRouter {
-  static final String initial = NewSignatureScreen.routeName;
+  static final String initial = ToolsScreen.routeName;
 
   static final GoRouter appRouter = GoRouter(
     initialLocation: initial,

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart';
 
@@ -24,7 +25,7 @@ class ApplySignatureScreen extends StatefulWidget {
   static const routeName = '/applySignature';
 
   final String documentImagePath;
-  final Uint8List? signatureBytes; // ✅ Uint8List
+  final Uint8List? signatureBytes;
 
   const ApplySignatureScreen({
     super.key,
@@ -102,8 +103,9 @@ class _ApplySignatureScreenState extends State<ApplySignatureScreen> {
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        fontSize: 16.sp,
-                        color: const Color(0xFF8E8E93),
+                        fontSize: 17.sp,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -113,9 +115,9 @@ class _ApplySignatureScreenState extends State<ApplySignatureScreen> {
                         'Scan 27-sep-2025 at 8:15…',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: const Color(0xFF262626),
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -125,9 +127,9 @@ class _ApplySignatureScreenState extends State<ApplySignatureScreen> {
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 17.sp,
                         fontWeight: FontWeight.w600,
-                        color: _kPrimaryBlue,
+                        color: Color(0xFF657DF2),
                       ),
                     ),
                   ),
@@ -267,11 +269,12 @@ class _SignatureSelectionOverlay extends StatelessWidget {
             child: GestureDetector(
               onTap: onDelete,
               child: Container(
-                width: 28,
-                height: 28,
+                width: 26.w,
+                height: 26.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.white, width: 3),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.15),
@@ -281,8 +284,8 @@ class _SignatureSelectionOverlay extends StatelessWidget {
                 ),
                 child: const Icon(
                   CupertinoIcons.trash,
-                  size: 16,
-                  color: Color(0xFFFF3B30),
+                  size: 17,
+                  color: Color(0xFFff4c4c),
                 ),
               ),
             ),
@@ -298,17 +301,14 @@ class _SignatureSelectionOverlay extends StatelessWidget {
                 onResize(details.delta);
               },
               child: Container(
-                width: 22,
-                height: 22,
+                width: 26.w,
+                height: 26.h,
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.white, width: 3),
                 ),
-                child: const Icon(
-                  Icons.open_in_full,
-                  size: 14,
-                  color: Colors.white,
-                ),
+                child: SvgPicture.asset("assets/images/tool/Group.svg"),
               ),
             ),
           ),

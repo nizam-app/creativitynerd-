@@ -78,13 +78,14 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6FB),
+      backgroundColor: const Color(0xFFf4f8fd),
       body: SafeArea(
         child: Column(
           children: [
             // Top bar
-            SizedBox(
+            Container(
               height: 44.h,
+              color: Colors.white,
               child: Row(
                 children: [
                   GestureDetector(
@@ -95,8 +96,9 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
                       child: Text(
                         'Cancel',
                         style: TextStyle(
-                          fontSize: 16.sp,
-                          color: const Color(0xFF8E8E93),
+                          fontSize: 17.sp,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -106,8 +108,8 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
                       child: Text(
                         'New Sign',
                         style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
                           color: const Color(0xFF262626),
                         ),
                       ),
@@ -121,9 +123,9 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
                       child: Text(
                         'Done',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF007AFF),
+                          color: const Color(0xFF657DF2),
                         ),
                       ),
                     ),
@@ -132,7 +134,7 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
               ),
             ),
 
-            const Divider(height: 0),
+            // const Divider(height: 0),
 
             // Drawing area
             Expanded(
@@ -162,16 +164,17 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              width: 260.w,
+                              width: 297.w,
                               height: 1,
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Color(0xFFd6dade),
                             ),
                             SizedBox(height: 8.h),
                             Text(
                               'Sign your name using your finger',
                               style: TextStyle(
-                                fontSize: 13.sp,
-                                color: const Color(0xFF9BA3B0),
+                                fontSize: 12.sp,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ],
@@ -192,6 +195,10 @@ class _NewSignatureScreenState extends State<NewSignatureScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Color(0xFFededed),
+                              width: 3,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.12),
