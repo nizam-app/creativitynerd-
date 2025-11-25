@@ -109,10 +109,11 @@ class _EditFilterScreenState extends State<EditFilterScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              if (widget.checkCamera == CameraCheck.camera)
-                context.push(PageOrganizeScreen.routeName);
-              else
+              if (widget.checkCamera == CameraCheck.nonCamera) {
                 context.push(MargePdf45.routeName, extra: ScreenName.reorder);
+              } else if (widget.checkCamera == CameraCheck.camera) {
+                context.push(PageOrganizeScreen.routeName);
+              }
             },
             child: Text(
               "Done",

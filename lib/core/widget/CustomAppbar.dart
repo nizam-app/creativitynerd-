@@ -85,7 +85,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       fontFamily: "sf_Pro",
                       fontWeight: FontWeight.w600,
                       fontSize: 17.sp,
-                      color: AllColor.black,
+                      color: AllColor.primary,
                     ),
                   ),
                 ),
